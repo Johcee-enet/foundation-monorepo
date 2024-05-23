@@ -19,7 +19,7 @@ npx create-turbo@latest -e https://github.com/t3-oss/create-t3-turbo
 ```
 
 ## About
-
+User the T3-stack to host modules for react-native, nextjs applications
 Ever wondered how to migrate your T3 application into a monorepo? Stop right here! This is the perfect starter repo to get you running with the perfect stack!
 
 It uses [Turborepo](https://turborepo.org) and contains:
