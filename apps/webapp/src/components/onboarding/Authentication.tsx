@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { getErrorMsg } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "convex/react";
 import { useForm } from "react-hook-form";
@@ -20,7 +21,6 @@ import { api } from "@acme/api/convex/_generated/api";
 
 import { useToast } from "../ui/use-toast";
 import { formSchema } from "./FormShema";
-import { getErrorMsg } from "@/lib/utils";
 
 const Authentication = ({ login, refCode }: any) => {
   const router = useRouter();
@@ -67,7 +67,7 @@ const Authentication = ({ login, refCode }: any) => {
       } else {
         // Call sign up convex function
         const userId = await signUp({
-          email: values?.email,
+          email: values?.email.toLowerCase(),
           referreeCode: refCode,
         });
         // Set session before pushing

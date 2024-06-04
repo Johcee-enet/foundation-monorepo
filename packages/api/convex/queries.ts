@@ -53,7 +53,6 @@ export const getUserDetails = query({
       );
 
       return { ...user, totalUserCount, globalRank };
-
     }
   },
 });
@@ -166,15 +165,16 @@ export const getHistory = query({
 export const getOnlyXpHistory = query({
   args: { userId: v.id("user") },
   handler: async ({ db }, { userId }) => {
-    return (
+    const referrals =
       (await db
         .query("activity")
         .filter((q) =>
           q.and(q.eq(q.field("userId"), userId), q.eq(q.field("type"), "xp")),
         )
         .order("desc")
-        .take(25)) ?? []
-    );
+        .take(25)) ?? [];
+
+    return referrals.filter((ref) => !ref?.extra?.includes("%"));
   },
 });
 
