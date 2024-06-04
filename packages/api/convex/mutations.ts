@@ -22,7 +22,11 @@ export const storeEmail = internalMutation({
     if (
       existingUsers?.some((user) => user.email === args.email && !user?.deleted)
     ) {
-      throw new Error("Email already exist!");
+      throw new ConvexError({
+        message: "Email already exists",
+        code: 400,
+        status: "failed",
+      });
     }
 
     // Fetch dangling user details after deleted account
@@ -210,7 +214,11 @@ export const rewardTaskXp = mutation({
     const user = await db.get(userId);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new ConvexError({
+        message: "User not found",
+        code: 404,
+        status: "failed",
+      });
     }
     const currentMultiEffectReward = user?.multiplier
       ? xpCount * (user.multiplier / 100)
@@ -251,7 +259,11 @@ export const rewardEventXp = mutation({
     const user = await db.get(userId);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new ConvexError({
+        message: "User not found",
+        code: 404,
+        status: "failed",
+      });
     }
 
     // Check if all event actions have been comleted
@@ -333,10 +345,18 @@ export const updateEventsForUser = mutation({
 
     // Check if the event is already in user object then update only specific action
     if (!user) {
-      throw new Error("No user found");
+      throw new ConvexError({
+        message: "No user found",
+        code: 404,
+        status: "failed",
+      });
     }
     if (!event) {
-      throw new Error("No event found");
+      throw new ConvexError({
+        message: "No event found",
+        code: 404,
+        status: "failed",
+      });
     }
 
     // If event already in array
@@ -492,7 +512,11 @@ export const mine = internalMutation({
     const user = await db.get(userId);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new ConvexError({
+        message: "User not found",
+        code: 404,
+        status: "failed",
+      });
     }
 
     if (user.mineActive) {
@@ -550,7 +574,11 @@ export const claimRewards = mutation({
   handler: async ({ db }, { userId }) => {
     const user = await db.get(userId);
     if (!user) {
-      throw new Error("No user with that Id");
+      throw new ConvexError({
+        message: "No user with that Id",
+        code: 404,
+        status: "failed",
+      });
     }
 
     // Check if mine is inActive and if redeemableCount is greater than 0

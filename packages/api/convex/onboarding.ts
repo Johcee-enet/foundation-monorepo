@@ -99,7 +99,11 @@ export const loginUser = action({
         email: email.toLowerCase(),
       });
       if (!user) {
-        throw new ConvexError({ message: "User not found", code: 404, status: "failed" });
+        throw new ConvexError({
+          message: "User not found",
+          code: 404,
+          status: "failed",
+        });
       }
 
       // Compare password
@@ -110,11 +114,18 @@ export const loginUser = action({
         });
         return user;
       } else {
-        throw new ConvexError({ message: "Invalid email or password", code: 401, status: "failed" });
+        throw new ConvexError({
+          message: "Invalid email or password",
+          code: 401,
+          status: "failed",
+        });
       }
     } catch (e: any) {
       console.log(e, ":::Error getting user detail");
-      const message = (e instanceof ConvexError) ? (e.data as { message: string })?.message : "Issue with getting user";
+      const message =
+        e instanceof ConvexError
+          ? (e.data as { message: string })?.message
+          : "Issue with getting user";
       throw new ConvexError({ message, code: 500, status: "failed" });
     }
   },
@@ -139,12 +150,20 @@ export const loginTwitterUser = action({
         },
       );
       if (!user) {
-        throw new Error("User not found");
+        throw new ConvexError({
+          message: "User not found",
+          code: 404,
+          status: "failed",
+        });
       }
 
       return user;
     } catch (e: any) {
-      throw new Error("Issue with getting user");
+      throw new ConvexError({
+        message: "Issue with getting user",
+        code: 500,
+        status: "failed",
+      });
     }
   },
 });
@@ -321,7 +340,11 @@ export const storeNickname = mutation({
       // }
     } catch (e: any) {
       console.log(e.message ?? e.toString());
-      throw new Error(e.message ?? e.toString());
+      throw new ConvexError({
+        message: e.message ?? e.toString(),
+        code: 500,
+        status: "failed",
+      });
     }
   },
 });

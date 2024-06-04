@@ -1,5 +1,5 @@
 import { queryWithAuth } from "@convex-dev/convex-lucia-auth";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 
 import type { Id } from "./_generated/dataModel";
 import { internalQuery, query } from "./_generated/server";
@@ -10,14 +10,23 @@ import { internalQuery, query } from "./_generated/server";
 export const getOTPSecret = internalQuery({
   args: { userId: v.id("user") },
   handler: async (ctx, { userId }): Promise<string> => {
-    if (!userId) throw new Error("Invalid user ID supplied");
+    if (!userId)
+      throw new ConvexError({
+        message: "Invalid user ID supplied",
+        code: 404,
+        status: "failed",
+      });
 
     const user = await ctx.db.get(userId);
 
     console.log(user, ":::User");
 
     if (!user) {
-      throw new Error("No user exists with that email");
+      throw new ConvexError({
+        message: "No user exists with that email",
+        code: 404,
+        status: "failed",
+      });
     }
 
     return user.otpSecret!;
@@ -32,7 +41,11 @@ export const getUserDetails = query({
       const user = await db.get(userId);
 
       if (!user) {
-        throw new Error("No user with that Id");
+        throw new ConvexError({
+          message: "No user with that id",
+          code: 404,
+          status: "failed",
+        });
       }
 
       // Compute user global rank and return total user count
@@ -117,7 +130,11 @@ export const getLeaderBoard = query({
       const user = await db.get(userId);
 
       if (!user) {
-        throw new Error("No user with that id");
+        throw new ConvexError({
+          message: "No user with that id",
+          code: 404,
+          status: "failed",
+        });
       }
 
       const sortedUsers = rankedUsers
@@ -184,7 +201,11 @@ export const fetchTasks = query({
     // Filter shown tasks by users completed task list
     const user = await db.get(userId);
     if (!user) {
-      throw new Error("User not found");
+      throw new ConvexError({
+        message: "User not found",
+        code: 404,
+        status: "failed",
+      });
     }
 
     // Filter tasks based on tasks completions by user
@@ -199,7 +220,11 @@ export const fetchEvents = query({
     // Filter events by users completed eventsS
     const user = await db.get(userId);
     if (!user) {
-      throw new Error("User not found");
+      throw new ConvexError({
+        message: "User not found",
+        code: 404,
+        status: "failed",
+      });
     }
     const events = await db.query("events").order("desc").collect();
 

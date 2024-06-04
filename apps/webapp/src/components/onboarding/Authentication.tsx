@@ -68,7 +68,7 @@ const Authentication = ({ login, refCode }: any) => {
         // Call sign up convex function
         const userId = await signUp({
           email: values?.email.toLowerCase(),
-          referreeCode: refCode,
+          referreeCode: refCode ? refCode : undefined,
         });
         // Set session before pushing
         sessionStorage.setItem(
