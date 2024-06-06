@@ -87,7 +87,6 @@ const Authentication = ({ login, refCode }: any) => {
       console.log(err, ":::Onboarding_error");
       const errMsg = getErrorMsg(err);
       toast({
-        variant: "destructive",
         title: "Onboarding error",
         description: errMsg,
       });
