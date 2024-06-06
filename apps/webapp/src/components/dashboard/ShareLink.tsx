@@ -37,7 +37,7 @@ const ShareLink: FC<{ referralCode: string | undefined }> = ({ referralCode }) =
       setRefLink(
         process.env.NODE_ENV === "development"
           ? `http://localhost:3000?ref=${referralCode}`
-          : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}?ref=${referralCode}`,
+          : `https://app.enetfoundation.com?ref=${referralCode}`,
       );
     }
   }, [referralCode]);
