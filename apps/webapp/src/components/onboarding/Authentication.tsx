@@ -75,12 +75,12 @@ const Authentication = ({ login, refCode }: any) => {
           "fd-session",
           JSON.stringify({ userId: userId }),
         );
-        toast({
-          title: "Onboarding",
-          description: "OTP Sent to email",
-        });
+        // toast({
+        //   title: "Onboarding",
+        //   description: "OTP Sent to email",
+        // });
         router.push(
-          `/authentication/otp?email=${values?.email}&userId=${userId}`,
+          `/authentication/password?userId=${userId}`,
         );
       }
     } catch (err: any) {
