@@ -1,9 +1,18 @@
 {
   "name": "create-t3-turbo",
-  "private": true,
+  "devDependencies": {
+    "@acme/prettier-config": "*",
+    "@turbo/gen": "^1.13.0",
+    "prettier": "^3.2.5",
+    "turbo": "^1.13.0",
+    "typescript": "^5.4.3"
+  },
   "engines": {
     "node": ">=20.11.1"
   },
+  "packageManager": "bun@1.0.24",
+  "prettier": "@acme/prettier-config",
+  "private": true,
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
@@ -19,17 +28,5 @@
     "lint:ws": "bunx sherif@latest",
     "typecheck": "turbo typecheck"
   },
-  "devDependencies": {
-    "@acme/prettier-config": "*",
-    "@turbo/gen": "^1.13.0",
-    "prettier": "^3.2.5",
-    "turbo": "^1.13.0",
-    "typescript": "^5.4.3"
-  },
-  "prettier": "@acme/prettier-config",
-  "packageManager": "bun@1.0.24",
-  "workspaces": ["apps/*", "packages/*", "tooling/*"],
-  "dependencies": {
-    "convex": "^1.12.1"
-  }
+  "workspaces": ["apps/*", "packages/*", "tooling/*"]
 }
