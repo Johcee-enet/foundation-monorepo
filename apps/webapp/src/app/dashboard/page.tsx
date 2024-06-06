@@ -52,7 +52,7 @@ const Dashboard = () => {
       setRefLink(
         process.env.NODE_ENV === "development"
           ? `http://localhost:3000?ref=${userDetail?.referralCode}`
-          : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}?ref=${userDetail?.referralCode}`,
+          : `https://app.enetfoundation.com?ref=${userDetail?.referralCode}`,
       );
     }
   }, [userDetail]);
