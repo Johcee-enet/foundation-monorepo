@@ -28,5 +28,8 @@
   },
   "prettier": "@acme/prettier-config",
   "packageManager": "bun@1.0.24",
-  "workspaces": ["apps/*", "packages/*", "tooling/*"]
+  "workspaces": ["apps/*", "packages/*", "tooling/*"],
+  "dependencies": {
+    "convex": "^1.12.1"
+  }
 }
