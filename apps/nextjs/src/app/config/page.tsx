@@ -102,9 +102,12 @@ function ConfigPage() {
       setMiningRate(appConfig?.miningCount);
       setMiningHours(appConfig.miningHours);
       setXpCount(appConfig.xpCount);
-      setBoosts(appConfig?.boosts);
       setXpPerToken(appConfig?.xpPerToken);
       setMinimumSaleToken(appConfig?.minimumSaleToken);
+    }
+
+    if(appConfig && appConfig?.boosts) {
+      setBoosts(appConfig?.boosts);
     }
   }, [appConfig]);
 
