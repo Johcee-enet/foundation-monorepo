@@ -50,7 +50,35 @@ function ConfigPage() {
       uuid: string;
       xpCost: number;
     }[]
-  >([]);
+  >(
+    Array.from({ length: 3 }).map((_, index) => {
+      if (index === 0) {
+        return {
+          rate: 3,
+          title: "Mining Bot",
+          type: "bot",
+          uuid: crypto.randomUUID(),
+          xpCost: 200000,
+        };
+      } else if (index === 1) {
+        return {
+          rate: 10,
+          title: "Mining Rate",
+          type: "rate",
+          uuid: crypto.randomUUID(),
+          xpCost: 200000,
+        };
+      } else {
+        return {
+          rate: 6,
+          title: "Mining Duration",
+          type: "duration",
+          uuid: crypto.randomUUID(),
+          xpCost: 200000,
+        };
+      }
+    }),
+  );
 
   function setBoost(key: string, at: number, value: any) {
     const newBoosts = boosts?.map((boosts, i) => {
