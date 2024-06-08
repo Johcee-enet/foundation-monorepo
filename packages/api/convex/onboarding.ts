@@ -232,7 +232,6 @@ export const storeNickname = mutation({
             ? (config?.referralXpCount ?? 5000) * (referree?.multiplier / 100)
             : 0;
           const totalXpCount =
-            (referree?.xpCount ?? 0) +
             (referree?.claimedXp ?? 0) +
             (config?.referralXpCount ?? 5000) +
             currentMultiEffectReward +

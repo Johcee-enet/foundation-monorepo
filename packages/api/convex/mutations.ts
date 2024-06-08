@@ -131,7 +131,6 @@ export const redeemReferralCode = mutation({
         ? (config?.referralXpCount ?? 5000) * (referree?.multiplier / 100)
         : 0;
       const totalXpCount =
-        (referree?.xpCount ?? 0) +
         (referree?.claimedXp ?? 0) +
         (config?.referralXpCount ?? 5000) +
         currentMultiEffectReward +
@@ -224,7 +223,6 @@ export const rewardTaskXp = mutation({
       ? xpCount * (user.multiplier / 100)
       : 0;
     const totalXpCount =
-      (user?.xpCount ?? 0) +
       (user?.claimedXp ?? 0) +
       xpCount +
       currentMultiEffectReward +
@@ -305,7 +303,6 @@ export const rewardEventXp = mutation({
       ? xpCount * (user.multiplier / 100)
       : 0;
     const totalXpCount =
-      (user?.xpCount ?? 0) +
       (user?.claimedXp ?? 0) +
       xpCount +
       currentMultiEffectReward +
