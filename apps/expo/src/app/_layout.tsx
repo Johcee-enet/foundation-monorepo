@@ -8,10 +8,10 @@ import { ConvexProvider, ConvexReactClient } from "convex/react";
 
 import "react-native-get-random-values";
 
-import { useEffect } from "react";
-import { Alert } from "react-native";
+import React, { useEffect } from "react";
+import { Alert, Text, View } from "react-native";
 // import LoadingModal from "@/components/loading_modal";
-import { getData } from "@/storageUtils";
+import { getData, removeData } from "@/storageUtils";
 import { Env } from "@env";
 
 // import { useAction } from "convex/react";
@@ -140,16 +140,17 @@ export default function Layout() {
   // Handle user auto authentication after user data has been stored
 
   return (
-    <ConvexProvider client={convex}>
-      <Stack
-        initialRouteName="/(onboarding)/"
-        // initialRouteName="tasks"
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-        <Stack.Screen name="(main)" options={{ headerShown: false }} />
+    <ErrorBoundary>
+      <ConvexProvider client={convex}>
+        <Stack
+          initialRouteName="/(onboarding)/"
+          // initialRouteName="tasks"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+          <Stack.Screen name="(main)" options={{ headerShown: false }} />
 
-        {/* <LoadingModal
+          {/* <LoadingModal
           isLoadingModalVisible={isTwitterAuthLoading}
           setLoadingModalVisible={setTwitterAuthLoading}
         >
@@ -158,7 +159,49 @@ export default function Layout() {
             <Text>Authorizing your twitter account...</Text>
           </View>
         </LoadingModal> */}
-      </Stack>
-    </ConvexProvider>
+        </Stack>
+      </ConvexProvider>
+    </ErrorBoundary>
   );
+}
+
+
+
+class ErrorBoundary extends React.Component {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    // Update state so the next rrender will show the fallback UI
+    return { hasError: true };
+  }
+
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    console.log(error, errorInfo, ":::error occurred on the app");
+    // Clear state and re-direct to onboarding
+
+    removeData("@enet-store/user");
+    removeData("@enet-store/token");
+
+    router.replace("/(onboarding)/");
+  }
+
+
+  render() {
+    // @ts-ignore
+    if (this.state?.hasError) {
+      return (
+        <View className="p-2 flex items-center justify-center">
+          <Text className="text-white font-bolder text-lg">An error occurred while using the app</Text>
+        </View>
+      )
+    }
+
+
+    // @ts-ignore
+    return this.props.children;
+  }
 }

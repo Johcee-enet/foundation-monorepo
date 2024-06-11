@@ -187,7 +187,7 @@ export default function Register() {
                       storeData("@enet-store/isOnboarded", true);
 
                       router.push({
-                        pathname: "/(onboarding)/otp",
+                        pathname: "/(onboarding)/password",
                         params: { email, userId },
                       });
                     } catch (e: any) {
