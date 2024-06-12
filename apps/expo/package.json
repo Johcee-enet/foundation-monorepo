@@ -84,12 +84,17 @@
     "eslint": "^8.57.0",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["@acme/eslint-config/base", "@acme/eslint-config/react"],
-    "ignorePatterns": ["expo-plugins/**"]
+    "extends": [
+      "@acme/eslint-config/base",
+      "@acme/eslint-config/react"
+    ],
+    "ignorePatterns": [
+      "expo-plugins/**"
+    ]
   },
   "prettier": "@acme/prettier-config"
 }
