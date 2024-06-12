@@ -120,7 +120,7 @@ export default function LeaderboardPage() {
                   <View className="flex w-full flex-col gap-4 pr-[20px]">
                     {(data ? data.sortedUsers.splice(0, 3) : []).map(
                       (user, index) => {
-                        if (index === 0)
+                        if (index === 0) {
                           return (
                             <View
                               key={index}
@@ -158,8 +158,9 @@ export default function LeaderboardPage() {
                               </View>
                             </View>
                           );
+                        }
 
-                        if (index === 1)
+                        if (index === 1) {
                           return (
                             <View
                               key={index}
@@ -192,6 +193,7 @@ export default function LeaderboardPage() {
                               </View>
                             </View>
                           );
+                        }
 
                         return (
                           <View
