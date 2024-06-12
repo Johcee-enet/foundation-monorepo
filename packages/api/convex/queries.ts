@@ -49,23 +49,23 @@ export const getUserDetails = query({
       }
 
       // Compute user global rank and return total user count
-      const totalUserCount = (
-        await db
-          .query("user")
-          .filter((q) => q.eq(q.field("deleted"), false))
-          .collect()
-      ).length;
+      // const totalUserCount = (
+      //   await db
+      //     .query("user")
+      //     .withIndex("by_deleted", (q: any) => q.eq("deleted", false)
+      //     .collect()
+      // ).length;
+      const users = await db.query("user")
+        .withIndex("by_claimedXp_xpCount", (q) => q.gt("claimedXp", 5000))
+        .filter((q) => q.eq(q.field("deleted"), false))
+        .collect();
+      const indexedUserCount = users.length;
       const globalRank = calculateRank(
-        await db
-          .query("user")
-          .withIndex("by_xpCount")
-          .filter((q) => q.eq(q.field("deleted"), false))
-          .order("desc")
-          .collect(),
+        users,
         user?._id,
       );
 
-      return { ...user, totalUserCount, globalRank };
+      return { ...user, indexedUserCount, globalRank };
     }
   },
 });
@@ -83,10 +83,10 @@ export const getUserWithEmail = internalQuery({
     try {
       return await db
         .query("user")
-        .filter((q) =>
-          q.and(q.eq(q.field("email"), email), q.eq(q.field("deleted"), false)),
+        .withIndex("by_email", (q) =>
+          q.eq("email", email),
         )
-        .first();
+        .unique();
     } catch (e: any) {
       console.log(e.message ?? e.toString());
       throw e;
@@ -101,8 +101,8 @@ export const getUserWithNickname = internalQuery({
     try {
       return await db
         .query("user")
-        .filter((q) => q.eq(q.field("nickname"), nickname))
-        .first();
+        .withIndex("by_nickname", (q) => q.eq("nickname", nickname))
+        .unique();
     } catch (e: any) {
       console.log(e.message ?? e.toString());
       throw e;
@@ -115,18 +115,6 @@ export const getLeaderBoard = query({
   args: { userId: v.optional(v.id("user")) },
   handler: async ({ db }, { userId }) => {
     if (userId) {
-      const rankedUsers = await db
-        .query("user")
-        .withIndex("by_xpCount")
-        .filter((q) => q.eq(q.field("deleted"), false))
-        .order("desc")
-        .take(10);
-
-      const users = await db
-        .query("user")
-        .filter((q) => q.eq(q.field("deleted"), false))
-        .collect();
-
       const user = await db.get(userId);
 
       if (!user) {
@@ -136,6 +124,19 @@ export const getLeaderBoard = query({
           status: "failed",
         });
       }
+
+      const rankedUsers = await db
+        .query("user")
+        .withIndex("by_xpCount", (q) => q.gt("xpCount", 100000))
+        .filter((q) => q.eq(q.field("deleted"), false))
+        .order("desc")
+        .take(10);
+
+      const users = await db
+        .query("user")
+        .withIndex("by_deleted", (q) => q.eq("deleted", false))
+        .collect();
+
 
       const sortedUsers = rankedUsers
         .slice()
@@ -169,13 +170,15 @@ export const getWeeklyTopRanked = internalQuery({
 export const getHistory = query({
   args: { userId: v.optional(v.id("user")) },
   handler: async ({ db }, { userId }) => {
-    return (
-      (await db
+    if(userId) {
+    return await db
         .query("activity")
-        .filter((q) => q.eq(q.field("userId"), userId))
+        .withIndex("by_userId", (q) => q.eq("userId", userId))
         .order("desc")
-        .take(25)) ?? []
-    );
+        .take(25);
+    } else {
+      return [];
+    }
   },
 });
 
@@ -185,8 +188,8 @@ export const getOnlyXpHistory = query({
     const referrals =
       (await db
         .query("activity")
-        .filter((q) =>
-          q.and(q.eq(q.field("userId"), userId), q.eq(q.field("type"), "xp")),
+        .withIndex("by_userId_xp", (q) =>
+          q.eq("userId", userId).eq("type", "xp"),
         )
         .order("desc")
         .take(25)) ?? [];
@@ -199,14 +202,14 @@ export const fetchTasks = query({
   args: { userId: v.id("user") },
   handler: async ({ db }, { userId }) => {
     // Filter shown tasks by users completed task list
-    const user = await db.get(userId);
-    if (!user) {
-      throw new ConvexError({
-        message: "User not found",
-        code: 404,
-        status: "failed",
-      });
-    }
+    // const user = await db.get(userId);
+    // if (!user) {
+    //   throw new ConvexError({
+    //     message: "User not found",
+    //     code: 404,
+    //     status: "failed",
+    //   });
+    // }
 
     // Filter tasks based on tasks completions by user
     const tasks = await db.query("tasks").order("desc").collect();
@@ -218,14 +221,14 @@ export const fetchEvents = query({
   args: { userId: v.id("user") },
   handler: async ({ db, storage }, { userId }) => {
     // Filter events by users completed eventsS
-    const user = await db.get(userId);
-    if (!user) {
-      throw new ConvexError({
-        message: "User not found",
-        code: 404,
-        status: "failed",
-      });
-    }
+    // const user = await db.get(userId);
+    // if (!user) {
+    //   throw new ConvexError({
+    //     message: "User not found",
+    //     code: 404,
+    //     status: "failed",
+    //   });
+    // }
     const events = await db.query("events").order("desc").collect();
 
     const loadedEvents = await Promise.all(

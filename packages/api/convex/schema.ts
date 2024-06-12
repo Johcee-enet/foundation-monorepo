@@ -71,13 +71,19 @@ export default defineSchema(
       lastActive: v.optional(v.number()),
     })
       .index("by_xpCount", ["xpCount"])
-      .index("by_mineActive", ["mineActive"]),
+      .index("by_email", ["email"])
+      .index("by_nickname", ["nickname"])
+      .index("by_claimedXp_xpCount", ["claimedXp", "xpCount"])
+      .index("by_mineActive", ["mineActive"])
+      .index("by_deleted", ["deleted"]),
     activity: defineTable({
       userId: v.id("user"),
       message: v.string(),
       extra: v.optional(v.string()),
       type: v.union(v.literal("xp"), v.literal("rank")),
-    }),
+    })
+    .index("by_userId", ["userId"])
+    .index("by_userId_xp", ["userId", "type"]),
     ads: defineTable({
       link: v.string(),
       storageId: v.id("_storage"),
