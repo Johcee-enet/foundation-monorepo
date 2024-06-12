@@ -142,7 +142,7 @@ const TrackPositions: FC<{
         </div>
         <div className="grid gap-1">
           <div className="grid grid-cols-2 text-center">
-            <h3>Position</h3> <h3>Members</h3>
+            <h3>Position</h3>
           </div>
           <div className="flex justify-between gap-1 rounded-lg bg-white p-1 text-center dark:bg-black">
             <h3>
@@ -151,13 +151,13 @@ const TrackPositions: FC<{
                 minimumFractionDigits: 2,
               })}
             </h3>
-            <span className="h-full w-[1px] bg-black dark:bg-white"></span>
+            {/*<span className="h-full w-[1px] bg-black dark:bg-white"></span>
             <h3>
               {Number(leaderBoards?.totalUsers ?? 0).toLocaleString("en-US", {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2,
               })}
-            </h3>
+            </h3> */}
           </div>
         </div>
       </div>

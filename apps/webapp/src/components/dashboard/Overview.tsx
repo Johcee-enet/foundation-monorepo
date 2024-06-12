@@ -20,17 +20,17 @@ const Overview = (props: OverviewContent) => {
 
   return (
     <div className="overview-container">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-start">
         <div className="rounded-md bg-white/15 p-2 text-xl text-white">
           <FaTrophy />
         </div>
-        <Link href="/dashboard/leaderboard">
+        {/*<Link href="/dashboard/leaderboard">
           {" "}
           <div className="flex items-center gap-2 text-xl font-semibold text-[#ABABAB]">
             <HiMiniUserGroup />
             {props.users}
           </div>
-        </Link>
+        </Link>*/}
       </div>
       <div className="mt-2 flex h-full flex-col px-10">
         <div className="grid grid-cols-2">
