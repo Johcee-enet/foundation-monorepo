@@ -120,7 +120,7 @@ export const getLeaderBoard = query({
         .withIndex("by_xpCount")
         .filter((q) => q.eq(q.field("deleted"), false))
         .order("desc")
-        .collect();
+        .take(10);
 
       const users = await db
         .query("user")
