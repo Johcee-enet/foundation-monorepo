@@ -40,7 +40,7 @@ const Overview = (props: OverviewContent) => {
           </div>
           <div>
             <span className="text-lg text-[#ABABAB]">Global Rank</span>
-            <h2 className="mt-1 text-4xl text-white">{props.rank}{props.rank >= 50? '+' : null}</h2>
+            <h2 className="mt-1 text-4xl text-white flex items-center">{props.rank}{props.rank >= 50? '+' : null}</h2>
           </div>
         </div>
         <CopyToClipboard
