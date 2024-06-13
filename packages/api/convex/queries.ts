@@ -56,9 +56,9 @@ export const getUserDetails = query({
       //     .collect()
       // ).length;
       const users = await db.query("user")
-        .withIndex("by_claimedXp_xpCount", (q) => q.gt("claimedXp", 5000))
-        .filter((q) => q.eq(q.field("deleted"), false))
-        .collect();
+        .withIndex("by_deleted_xpCount", (q) => q.eq("deleted", false).gt('xpCount', 5000))
+        .order("desc")
+        .take(50);
       const indexedUserCount = users.length;
       const globalRank = calculateRank(
         users,
@@ -73,7 +73,8 @@ export const getUserDetails = query({
 function calculateRank(users: any[], userId: Id<"user">): number {
   const sortedUsers = users.slice().sort((a, b) => b.xpCount - a.xpCount);
   const userIndex = sortedUsers.findIndex((user) => user._id === userId);
-  return userIndex + 1; // Adding 1 because array index starts from 0 but rank starts from 1
+  const rank = userIndex < 0 ? 50 : userIndex + 1;
+  return rank; // Adding 1 because array index starts from 0 but rank starts from 1
 }
 
 // Get user details with email
@@ -170,8 +171,8 @@ export const getWeeklyTopRanked = internalQuery({
 export const getHistory = query({
   args: { userId: v.optional(v.id("user")) },
   handler: async ({ db }, { userId }) => {
-    if(userId) {
-    return await db
+    if (userId) {
+      return await db
         .query("activity")
         .withIndex("by_userId", (q) => q.eq("userId", userId))
         .order("desc")

@@ -75,7 +75,8 @@ export default defineSchema(
       .index("by_nickname", ["nickname"])
       .index("by_claimedXp_xpCount", ["claimedXp", "xpCount"])
       .index("by_mineActive", ["mineActive"])
-      .index("by_deleted", ["deleted"]),
+      .index("by_deleted", ["deleted"])
+      .index("by_deleted_xpCount", ['deleted', "xpCount"]),
     activity: defineTable({
       userId: v.id("user"),
       message: v.string(),

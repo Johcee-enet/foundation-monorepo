@@ -70,7 +70,7 @@ const Dashboard = () => {
       <Overview
         rank={userDetail?.globalRank ?? 1000}
         referrals={userDetail?.referralCount ?? 16}
-        users={userDetail?.totalUserCount ?? 0}
+        users={0}
         referralCode={refLink ?? "gzrhjtw5"}
       />
       <div className="my-10">
