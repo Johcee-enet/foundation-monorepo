@@ -49,6 +49,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (userDetail) {
+      console.log(userDetail?.mineHours, ":::Mine hours");
       setRefLink(
         process.env.NODE_ENV === "development"
           ? `http://localhost:3000?ref=${userDetail?.referralCode}`

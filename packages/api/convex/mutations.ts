@@ -48,7 +48,7 @@ export const storeEmail = internalMutation({
         miningRate: config?.miningCount,
         mineActive: false,
         referralCount: 0,
-        mineHours: config?.miningHours,
+        mineHours: config?.miningHours ?? 6,
         redeemableCount: 0,
         xpCount: config?.xpCount ?? 1000,
       });
@@ -391,44 +391,44 @@ export const updateEventsForUser = mutation({
       await db.patch(userId, {
         eventsJoined: user.eventsJoined
           ? [
-            ...user.eventsJoined,
-            {
-              eventId: event._id,
-              completed: false,
-              actions: event.actions.map((action) => {
-                if (action.name === actionName) {
-                  return {
-                    completed: true,
-                    link: action.link,
-                    channel: action.channel,
-                    name: action.name,
-                    type: action.type,
-                  };
-                } else {
-                  return { ...action, completed: false };
-                }
-              }),
-            },
-          ]
+              ...user.eventsJoined,
+              {
+                eventId: event._id,
+                completed: false,
+                actions: event.actions.map((action) => {
+                  if (action.name === actionName) {
+                    return {
+                      completed: true,
+                      link: action.link,
+                      channel: action.channel,
+                      name: action.name,
+                      type: action.type,
+                    };
+                  } else {
+                    return { ...action, completed: false };
+                  }
+                }),
+              },
+            ]
           : [
-            {
-              eventId: event._id,
-              completed: false,
-              actions: event.actions.map((action) => {
-                if (action.name === actionName) {
-                  return {
-                    completed: true,
-                    link: action.link,
-                    channel: action.channel,
-                    name: action.name,
-                    type: action.type,
-                  };
-                } else {
-                  return { ...action, completed: false };
-                }
-              }),
-            },
-          ],
+              {
+                eventId: event._id,
+                completed: false,
+                actions: event.actions.map((action) => {
+                  if (action.name === actionName) {
+                    return {
+                      completed: true,
+                      link: action.link,
+                      channel: action.channel,
+                      name: action.name,
+                      type: action.type,
+                    };
+                  } else {
+                    return { ...action, completed: false };
+                  }
+                }),
+              },
+            ],
       });
     }
   },
@@ -480,7 +480,9 @@ export const deleteAccount = mutation({
 export const triggerMining = action({
   args: { userId: v.id("user") },
   handler: async ({ runAction, runMutation }, { userId }) => {
-    const { user, config } = await runMutation(internal.mutations.beforeMine, { userId });
+    const { user, config } = await runMutation(internal.mutations.beforeMine, {
+      userId,
+    });
     await runAction(internal.mutations.mine, { userId, config, user });
   },
 });
@@ -493,19 +495,19 @@ export const beforeMine = internalMutation({
     const config = await db.query("config").first();
 
     // Check if users has boost active before starting mine
-    if (!user?.boostStatus?.length) {
-      await db.patch(userId, {
-        mineHours: config?.miningHours,
-        miningRate: config?.miningCount,
-      });
-    }
+    // if (!user?.boostStatus?.length) {
+    //   await db.patch(userId, {
+    //     mineHours: config?.miningHours,
+    //     miningRate: config?.miningCount,
+    //   });
+    // }
 
     return { user, config };
   },
 });
 
 export const mine = internalAction({
-  args: { userId: v.id("user"), config: v.any(), user: v.any(), },
+  args: { userId: v.id("user"), config: v.any(), user: v.any() },
   handler: async ({ scheduler, runMutation }, { userId, user, config }) => {
     // const config = await db.query("config").first();
     // const user = await db.get(userId);
@@ -521,16 +523,17 @@ export const mine = internalAction({
     if (user.mineActive) {
       // Check if time is still within min rage
       if (
-        differenceInHours(Date.now(), new Date(user.mineStartTime!), {
+        differenceInHours(Date.now(), new Date(user.mineStartTime), {
           roundingMethod: "floor",
         }) < user.mineHours
       ) {
         await runMutation(internal.mutations.updateUserMineData, {
-          userId, data: {
+          userId,
+          data: {
             redeemableCount:
               user.miningRate *
-              differenceInHours(Date.now(), new Date(user.mineStartTime!)),
-          }
+              differenceInHours(Date.now(), new Date(user.mineStartTime)),
+          },
         });
 
         await scheduler.runAfter(1000 * 60 * 60, internal.mutations.mine, {
@@ -541,49 +544,49 @@ export const mine = internalAction({
       } else {
         // Cancel mine and reset also check for active boosts
 
-        const botUuid = config?.boosts?.find((boost: any) => boost?.type === "bot");
+        const botUuid = config?.boosts?.find(
+          (boost: any) => boost?.type === "bot",
+        );
         const persistBot = user?.boostStatus?.find(
           (boost: any) => boost?.boostId === botUuid?.uuid,
         );
 
         await runMutation(internal.mutations.updateUserMineData, {
-          userId, data: {
+          userId,
+          data: {
             mineActive: false,
             boostStatus: persistBot ? [persistBot] : undefined,
             // mineHours: config?.miningHours,
             // miningRate: config?.miningCount,
             redeemableCount:
               user.miningRate *
-              differenceInHours(Date.now(), new Date(user.mineStartTime!), {
+              differenceInHours(Date.now(), new Date(user.mineStartTime), {
                 roundingMethod: "floor",
               }),
-          }
+          },
         });
-
       }
     } else {
       // Start
-      await runMutation(internal.mutations.updateUserMineData, { userId, data: { mineActive: true, mineStartTime: Date.now() } });
+      await runMutation(internal.mutations.updateUserMineData, {
+        userId,
+        data: { mineActive: true, mineStartTime: Date.now() },
+      });
       await scheduler.runAfter(1000 * 60 * 60, internal.mutations.mine, {
         userId,
         config,
-        user
+        user,
       });
-
     }
-
   },
 });
-
 
 export const updateUserMineData = internalMutation({
   args: { userId: v.id("user"), data: v.any() },
   handler: async ({ db }, { userId, data }) => {
-
     await db.patch(userId, { ...data });
-
   },
-})
+});
 
 // claim redeemable amount: reset and increment minedCount
 export const claimRewards = mutation({
@@ -761,9 +764,9 @@ export const activateBoost = mutation({
         mineHours: config.miningHours + boost.rate,
         boostStatus: user?.boostStatus
           ? [
-            ...(user?.boostStatus ?? []),
-            { boostId: boost?.uuid, isActive: true },
-          ]
+              ...(user?.boostStatus ?? []),
+              { boostId: boost?.uuid, isActive: true },
+            ]
           : [{ boostId: boost?.uuid, isActive: true }],
       });
 
