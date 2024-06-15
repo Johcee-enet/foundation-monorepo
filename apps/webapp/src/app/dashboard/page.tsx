@@ -16,6 +16,8 @@ import { HiMiniUserGroup } from "react-icons/hi2";
 
 import type { Doc, Id } from "@acme/api/convex/_generated/dataModel";
 import { api } from "@acme/api/convex/_generated/api";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Loader } from "@/components/loader";
 
 export type EventType = Partial<Doc<"events">> & {
   company: Partial<Doc<"company">> & { logoUrl: string };
@@ -33,12 +35,11 @@ const Dashboard = () => {
   });
 
   const claimReward = useMutation(api.mutations.claimRewards);
-  const triggerMiner = useAction(api.mutations.triggerMining);
 
   // console.log(bottom, top, ":::Bottom Top, size", height, height - top);
 
   // handle tasks cycle
-  const [isLoadingModalVisible, setLoadingModalVisible] = useState(false);
+  const [isLoadingModalVisible, setLoadingModalVisible] = useState(typeof userDetail === "undefined"? true : false);
   const rewardTaskXpCount = useMutation(api.mutations.rewardTaskXp);
   const rewardEventXpCount = useMutation(api.mutations.rewardEventXp);
   const updateEventAction = useMutation(api.mutations.updateEventsForUser);
@@ -46,6 +47,17 @@ const Dashboard = () => {
 
   // refLInk
   const [refLink, setRefLink] = useState<string>();
+
+
+  // toggle loader modal
+  useEffect(() => {
+
+    if(userDetail && typeof userDetail !== "undefined") {
+      setLoadingModalVisible(false);
+    }
+    
+  }, [userDetail])
+
 
   useEffect(() => {
     if (userDetail) {
@@ -60,6 +72,11 @@ const Dashboard = () => {
 
   return (
     <main className="container pb-10 pt-32">
+      <Dialog open={isLoadingModalVisible}>
+        <DialogContent hideCloseBtn className="bg-transparent border-none outline-none shadow-none">
+          <Loader color="white" />
+        </DialogContent>
+      </Dialog>
       <Header nickname={userDetail?.nickname} />
       <Status
         mineRate={userDetail?.miningRate ?? 0}

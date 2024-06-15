@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -8,11 +8,23 @@ import AppleAuth from "@/components/onboarding/AppleAuth";
 import Authentication from "@/components/onboarding/Authentication";
 import GoogleAuth from "@/components/onboarding/GoogleAuth";
 import { Button } from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 
 export default function Home() {
   const [login, setLogin] = useState<HTMLButtonElement | boolean>(false);
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref");
+  const router = useRouter();
+
+
+
+  useEffect(() => {
+    const storageItem = localStorage.getItem('fd-session');
+    if(storageItem) {
+      const session = JSON.parse(storageItem);
+      router.replace(`/dashboard?userId=${session?.userId}`);
+    }
+  }, []);
 
   return (
     <main className="flex flex-col">

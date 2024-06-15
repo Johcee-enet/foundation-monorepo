@@ -518,15 +518,16 @@ export const mine = internalMutation({
 
 
     for (const user of users) {
-      if (
-        differenceInHours(Date.now(), new Date(user.mineStartTime!), {
+      const currentMineHour = differenceInHours(Date.now(), new Date(user.mineStartTime!), {
           roundingMethod: "floor",
-        }) < user.mineHours
+        });
+      if (
+        currentMineHour < user.mineHours
       ) {
         await db.patch(user._id, {
           redeemableCount:
             user.miningRate *
-            differenceInHours(Date.now(), new Date(user.mineStartTime!)),
+            currentMineHour,
         }
         );
 
@@ -552,22 +553,13 @@ export const mine = internalMutation({
             // miningRate: config?.miningCount,
             redeemableCount:
               user.miningRate *
-              differenceInHours(Date.now(), new Date(user.mineStartTime!), {
-                roundingMethod: "floor",
-              }),
+              currentMineHour,
           }
         );
       }
 
     }
 
-  },
-});
-
-export const updateUserMineData = internalMutation({
-  args: { userId: v.id("user"), data: v.any() },
-  handler: async ({ db }, { userId, data }) => {
-    await db.patch(userId, data);
   },
 });
 

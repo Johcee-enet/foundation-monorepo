@@ -7,7 +7,7 @@ const Header: FC<{ nickname: string | undefined }> = ({ nickname }) => {
     <header className="header">
       <div className="flex items-center gap-2.5">
         <h3 className="font-semibold  text-black dark:text-white">
-          Welcome {nickname ?? "Jochee"}
+          Welcome {nickname ?? "Guest"}
           {/* Usersname information passed down to the dashboard */}
         </h3>
       </div>

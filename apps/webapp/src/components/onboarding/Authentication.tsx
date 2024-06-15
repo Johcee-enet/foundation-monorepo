@@ -59,7 +59,7 @@ const Authentication = ({ login, refCode }: any) => {
           password: values?.password,
         });
         // Set session before pushing
-        sessionStorage.setItem(
+        localStorage.setItem(
           "fd-session",
           JSON.stringify({ userId: user?._id }),
         );
@@ -71,7 +71,7 @@ const Authentication = ({ login, refCode }: any) => {
           referreeCode: refCode ? refCode : undefined,
         });
         // Set session before pushing
-        sessionStorage.setItem(
+        localStorage.setItem(
           "fd-session",
           JSON.stringify({ userId: userId }),
         );

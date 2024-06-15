@@ -25,7 +25,7 @@ export default function SessionProvider({ children }: SessionProps) {
     null,
   );
   useEffect(() => {
-    const _session = sessionStorage.getItem("fd-session");
+    const _session = localStorage.getItem("fd-session");
     if (_session) {
       setSession(JSON.parse(_session));
       router.replace("/dashboard");
