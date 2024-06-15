@@ -12,12 +12,13 @@ import { useToast } from "../ui/use-toast";
 type Mining = {
   mined: number;
   mining: number;
+  mineHours: number;
   time: string;
   rate: number;
   userId: string | null;
 };
 
-const MiningStats: FC<Mining> = ({ mined, mining, time, rate, userId }) => {
+const MiningStats: FC<Mining> = ({ mined, mining, mineHours, time, rate, userId }) => {
   const { toast } = useToast();
   const session = useSession();
 
@@ -35,7 +36,7 @@ const MiningStats: FC<Mining> = ({ mined, mining, time, rate, userId }) => {
       <h3 className="text-lg">
         $FOUND Mined: <span>{mined}</span>
       </h3>
-      <p>Mining: {userDetail?.redeemableCount ?? 0}</p>
+      <p>Mining: {mining.toFixed(4)}</p>
       <p>{time}</p>
       <div>
         <div className="tag">

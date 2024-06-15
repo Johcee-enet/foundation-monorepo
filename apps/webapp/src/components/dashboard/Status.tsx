@@ -2,12 +2,12 @@
 
 import { FC, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSession } from "@/lib/sessionContext";
-import { useQuery } from "convex/react";
+// import { useSession } from "@/lib/sessionContext";
+// import { useQuery } from "convex/react";
 import { addHours, differenceInSeconds } from "date-fns";
 
-import { api } from "@acme/api/convex/_generated/api";
-import { Id } from "@acme/api/convex/_generated/dataModel";
+// import { api } from "@acme/api/convex/_generated/api";
+import { Doc } from "@acme/api/convex/_generated/dataModel";
 
 import MiningStats from "./MiningStats";
 import SocialStats from "./SocialStats";
@@ -17,15 +17,17 @@ const Status: FC<{
   mineRate: number;
   mineHours: number;
   userId: string | null;
-}> = ({ minedCount, mineRate, mineHours, userId }) => {
-  const session = useSession();
+  userDetail: Doc<"user"> | null | undefined;
+}> = ({ minedCount, mineRate, mineHours, userId, userDetail }) => {
+  // const session = useSession();
 
-  const userDetail = useQuery(api.queries.getUserDetails, {
-    userId: (session?.userId ?? userId) as Id<"user">,
-  });
+  // const userDetail = useQuery(api.queries.getUserDetails, {
+  //   userId: (session?.userId ?? userId) as Id<"user">,
+  // });
   // Embeding
   // const [tweetEmbedHeight, setTweetEmbedHeight] = useState<number>();
-  const [remaining, setRemaining] = useState<string>("4h 59m 59s");
+  const [remaining, setRemaining] = useState<string>(formatTime(userDetail?.mineHours ?? 6));
+  const [minedCountSec, setMinedCountSec] = useState<number>(minedCount);
 
   useEffect(() => {
     if (
@@ -40,11 +42,26 @@ const Status: FC<{
   useEffect(() => {
     // Function to check if the countdown has ended
 
-    if (userDetail?.mineActive) {
+    if (userDetail && userDetail?.mineActive) {
       checkCountdown({
         startTime: userDetail.mineStartTime ?? Date.now(),
         countdownDuration: userDetail?.mineHours,
       });
+      calculateMinedAmount(userDetail.miningRate, userDetail.mineStartTime as number);
+    }
+
+
+    function calculateMinedAmount(miningRate: number, startTime: number) {
+
+
+      const elapsedSecs = differenceInSeconds(Date.now(), startTime);
+      console.log(elapsedSecs, ":::Elapsed seconds");
+      const minedCountInASec = miningRate / 3600;
+      // console.log(minedCountInASec, ":::Seconds mine count");
+      const totalMinedCountSince = elapsedSecs * minedCountInASec;
+      // console.log(totalMinedCountSince, ":::Total mined in seconds", totalMinedCountSince.toLocaleString('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3}));
+      setMinedCountSec(totalMinedCountSince);
+      
     }
 
     function checkCountdown({
@@ -79,13 +96,19 @@ const Status: FC<{
 
         // Check again after 1 second
         setTimeout(
-          () => checkCountdown({ startTime, countdownDuration }),
+          () => {
+            checkCountdown({ startTime, countdownDuration });
+            calculateMinedAmount(minedCountSec, startTime);
+          },
           1000,
         );
 
         setRemaining(`${hours}h ${minutes}m ${seconds}s`);
+        // setRemaining(formatTime(hours));
       }
     }
+
+
   }, [userDetail, remaining, userDetail?.mineActive, setRemaining]);
 
   return (
@@ -103,7 +126,8 @@ const Status: FC<{
           {/* props for mining stats info */}
           <MiningStats
             mined={Number(minedCount ?? 0)}
-            mining={Number(mineHours ?? 6)}
+            mining={Number(minedCountSec ?? 6)}
+            mineHours={Number(mineHours ?? 0)}
             time={remaining}
             rate={Number(mineRate ?? 0.25)}
             userId={userId}
@@ -124,3 +148,21 @@ const Status: FC<{
 };
 
 export default Status;
+
+
+const formatTime = (hours: number): string => {
+
+  const wholeHours = Math.floor(hours);
+
+  // calculate the fractional part of the hour
+  const fractionalHours = hours - wholeHours;
+  const minutes = Math.floor(fractionalHours * 60);
+
+  // Calculate the remaining fractional part and convert it to seconds
+  const remainingFractionalMinutes = (fractionalHours * 60) - minutes;
+  const seconds = Math.round(remainingFractionalMinutes * 60);
+
+  // Format the result string
+  return `${wholeHours}h ${minutes}m ${seconds}s`;
+
+}

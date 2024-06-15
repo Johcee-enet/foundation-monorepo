@@ -66,6 +66,7 @@ const Dashboard = () => {
         minedCount={userDetail?.minedCount ?? 0}
         mineHours={userDetail?.mineHours ?? 0}
         userId={userId}
+        userDetail={userDetail}
       />
       <h3 className="mb-2 mt-7 text-base font-semibold">Overview</h3>
       <Overview
