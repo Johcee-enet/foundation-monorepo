@@ -27,7 +27,7 @@ const Status: FC<{
   // Embeding
   // const [tweetEmbedHeight, setTweetEmbedHeight] = useState<number>();
   const [remaining, setRemaining] = useState<string>(formatTime(userDetail?.mineHours ?? 6));
-  const [minedCountSec, setMinedCountSec] = useState<number>(minedCount);
+  const [minedCountSec, setMinedCountSec] = useState<number>(0);
 
   useEffect(() => {
     if (
