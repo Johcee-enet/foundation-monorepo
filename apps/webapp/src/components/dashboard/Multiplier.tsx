@@ -6,18 +6,17 @@ import { useMutation, useQuery } from "convex/react";
 import { PiTrendDownLight } from "react-icons/pi";
 
 import { api } from "@acme/api/convex/_generated/api";
-import { Id } from "@acme/api/convex/_generated/dataModel";
+import { Doc, Id } from "@acme/api/convex/_generated/dataModel";
 
 type TogglerSystem = {
   toggleru: boolean;
   userId: string | null;
-};
+  userDetail: Doc<"user"> | null | undefined;
+ };
 
 const Multiplier = (props: TogglerSystem) => {
   const session = useSession();
-  const userDetails = useQuery(api.queries.getUserDetails, {
-    userId: (props?.userId ?? session?.userId) as Id<"user">,
-  });
+  const userDetails = props.userDetail;
   const [multipliers, setMultipliers] = useState([
     {
       value: 500000,

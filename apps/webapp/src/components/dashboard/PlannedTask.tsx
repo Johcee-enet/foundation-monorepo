@@ -12,8 +12,9 @@ import { RiArrowRightDoubleLine } from "react-icons/ri";
 import { TiFlash } from "react-icons/ti";
 
 import Tasks from "./task/Tasks";
+import { Doc } from "@acme/api/convex/_generated/dataModel";
 
-const PlannedTask: FC<{ userId: string | null }> = ({ userId }) => {
+const PlannedTask: FC<{ userId: string | null, userDetail: Doc<"user"> | null | undefined }> = ({ userId, userDetail }) => {
   const [showMultiplier, setShowMultiplier] = useState(false);
   return (
     <Tabs defaultValue="socialXps" className="drop-shadow-sm">
@@ -51,7 +52,7 @@ const PlannedTask: FC<{ userId: string | null }> = ({ userId }) => {
           />
         </Button>
       </div>
-      <Multiplier toggleru={showMultiplier} userId={userId} />
+      <Multiplier userDetail={userDetail} toggleru={showMultiplier} userId={userId} />
       <TabsContent value="socialXps" className="tasktab-container-content">
         <Tasks userId={userId} />
       </TabsContent>

@@ -55,13 +55,13 @@ const Status: FC<{
 
 
       const elapsedSecs = differenceInSeconds(Date.now(), startTime);
-      console.log(elapsedSecs, ":::Elapsed seconds");
+      // console.log(elapsedSecs, ":::Elapsed seconds");
       const minedCountInASec = miningRate / 3600;
       // console.log(minedCountInASec, ":::Seconds mine count");
       const totalMinedCountSince = elapsedSecs * minedCountInASec;
       // console.log(totalMinedCountSince, ":::Total mined in seconds", totalMinedCountSince.toLocaleString('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3}));
       setMinedCountSec(totalMinedCountSince);
-      
+
     }
 
     function checkCountdown({
@@ -97,8 +97,10 @@ const Status: FC<{
         // Check again after 1 second
         setTimeout(
           () => {
-            checkCountdown({ startTime, countdownDuration });
-            calculateMinedAmount(minedCountSec, startTime);
+            if (userDetail) {
+              checkCountdown({ startTime, countdownDuration });
+              calculateMinedAmount(userDetail.miningRate, startTime);
+            }
           },
           1000,
         );
@@ -109,7 +111,7 @@ const Status: FC<{
     }
 
 
-  }, [userDetail, remaining, userDetail?.mineActive, setRemaining]);
+  }, [userDetail, remaining, minedCountSec, setMinedCountSec, userDetail?.mineActive, setRemaining]);
 
   return (
     <>
@@ -131,6 +133,7 @@ const Status: FC<{
             time={remaining}
             rate={Number(mineRate ?? 0.25)}
             userId={userId}
+            userDetail={userDetail}
           />
         </TabsContent>
         <TabsContent value="social" className="tab-content">
