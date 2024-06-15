@@ -86,7 +86,7 @@ const Status: FC<{
         setRemaining(`${hours}h ${minutes}m ${seconds}s`);
       }
     }
-  }, [userDetail, remaining]);
+  }, [userDetail, remaining, userDetail?.mineActive, setRemaining]);
 
   return (
     <>
