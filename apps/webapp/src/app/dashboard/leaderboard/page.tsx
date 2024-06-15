@@ -32,9 +32,10 @@ const Leaderboard = () => {
           </h3>
         </div>
       </div>
-      <Suspense fallback={<Loader color="white" />}>
-        <TrackPositions leaderBoards={leaderBoards} />
-      </Suspense>
+
+      {
+        typeof leaderBoards === "undefined" ? <Loader color="white" /> : <TrackPositions leaderBoards={leaderBoards} />
+      }
     </main>
   );
 };

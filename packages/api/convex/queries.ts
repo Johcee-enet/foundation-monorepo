@@ -143,7 +143,7 @@ export const getLeaderBoard = query({
         .slice()
         .sort((a, b) => b.xpCount - a.xpCount);
 
-      const globalRank = calculateRank(users ?? [], user?._id);
+      const globalRank = calculateRank(users, user?._id);
 
       return {
         user,
