@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import React from 'react'
 import { FaArrowLeftLong } from 'react-icons/fa6'

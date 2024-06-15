@@ -3,7 +3,7 @@ import Image from "next/image";
 import { FaCrown } from "react-icons/fa";
 
 const TrackPositions: FC<{
-  leaderBoards: Record<string, any> | undefined;
+  leaderBoards: Record<string, any> | null | undefined;
 }> = ({ leaderBoards }) => {
   const sortedRank = leaderBoards?.sortedUsers;
   return (

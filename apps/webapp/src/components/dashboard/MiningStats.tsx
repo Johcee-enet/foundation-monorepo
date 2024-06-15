@@ -28,8 +28,6 @@ const MiningStats: FC<Mining> = ({ mined, mining, mineHours, time, rate, userId,
   // claim mine reward
   const claimReward = useMutation(api.mutations.claimRewards);
 
-
-
   const MineButton = () => userDetail?.mineActive ? (
     <Button
       className="h-fit gap-2 bg-white py-4 text-black"
