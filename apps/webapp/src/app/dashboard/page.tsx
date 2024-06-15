@@ -95,7 +95,7 @@ const Dashboard = () => {
           </div>
         </Link>
       </div>
-      <PlannedTask userId={userId} />
+      <PlannedTask userDetail={userDetail} userId={userId} />
       <TwitterProfile />
       {/* <ClaimXP /> */}
     </main>
