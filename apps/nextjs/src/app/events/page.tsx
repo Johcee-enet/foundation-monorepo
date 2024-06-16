@@ -425,6 +425,7 @@ function EventDialog({
     api.files.generateUploadUrlForEventCover,
   );
   const saveAfterUpload = async (uploaded: UploadFileResponse[]) => {
+    console.log(uploaded, ":::Uploaded event background image");
     setCoverStorageId((uploaded[0]?.response as any)?.storageId);
   };
 

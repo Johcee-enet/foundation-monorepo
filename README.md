@@ -252,7 +252,7 @@ A [blog post](https://jumr.dev/blog/t3-turbo) where I wrote how to migrate a T3 
 
 The following issues where reported on both the webapp, mobile app and the admin dashboard
 
-- [ ] Uploading image error in events page of admin dashboard
+- [x] Uploading image error in events page of admin dashboard
 - [ ] Onboarding issue where user gets no nickname
 - [ ] XP points exploit
 - [ ] Google adSense integration
