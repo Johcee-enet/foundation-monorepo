@@ -91,7 +91,7 @@ export default function DashboardPage() {
   const [referreeCode, setReferreeCode] = useState<string>();
 
   const claimReward = useMutation(api.mutations.claimRewards);
-  const triggerMiner = useAction(api.mutations.triggerMining);
+  const triggerMiner = useMutation(api.mutations.triggerMining);
 
   // Get tasks and events
 
@@ -122,58 +122,6 @@ export default function DashboardPage() {
       setClaimModalVisible(true);
     }
   }, [userDetail?.mineActive, userDetail?.redeemableCount, userDetail]);
-
-  // countdown
-  useEffect(() => {
-    // Function to check if the countdown has ended
-
-    if (userDetail?.mineActive) {
-      checkCountdown({
-        startTime: userDetail.mineStartTime ?? Date.now(),
-        countdownDuration: userDetail?.mineHours,
-      });
-    }
-
-    function checkCountdown({
-      startTime,
-      countdownDuration = 6,
-    }: {
-      startTime: number;
-      countdownDuration: number;
-    }) {
-      // Set the start time of the countdown
-      // const startTime = new Date();
-
-      // Define the duration for the countdown (6 hours)
-      // const countdownDuration = 6;
-
-      // Calculate the end time for the countdown
-      const endTime = addHours(startTime, countdownDuration);
-
-      const currentTime = Date.now();
-      const remainingTime = differenceInSeconds(endTime, currentTime);
-
-      if (remainingTime <= 0) {
-        // Perform the action here
-      } else {
-        // const formattedRemainingTime = formatDuration(
-        //   { seconds: remainingTime },
-        //   { format: ["hours", "minutes", "seconds"] },
-        // );
-        const hours = Math.floor(remainingTime / 3600);
-        const minutes = Math.floor((remainingTime % 3600) / 60);
-        const seconds = remainingTime % 60;
-
-        // Check again after 1 second
-        setTimeout(
-          () => checkCountdown({ startTime, countdownDuration }),
-          1000,
-        );
-
-        setRemaining(`${hours}h ${minutes}m ${seconds}s`);
-      }
-    }
-  }, [userDetail, remaining]);
 
   // Check if user just onboarded and prompt to enter a referral code
   useEffect(() => {
@@ -450,20 +398,6 @@ export default function DashboardPage() {
                     {/* <Octicons name="database" size={20} color="white" /> */}
                   </TouchableOpacity>
                 )}
-              <Text className="font-[nunito]">
-                {
-                  userDetail && userDetail?.mineActive && remaining
-
-                  // format(
-                  //   userDetail?.mineStartTime
-                  //     ? userDetail.mineStartTime
-                  //     : Date.now(),
-                  //   "HH mm ss",
-                  // )
-                }
-
-                {userDetail && !userDetail?.mineActive && "5h 59m 59s"}
-              </Text>
 
               <ClaimModal
                 isClaimModalVisible={claimModalVisible}
@@ -802,6 +736,7 @@ export default function DashboardPage() {
                   miningRate={userDetail?.miningRate ?? 0}
                   xpEarned={userDetail?.xpCount ?? 0}
                   redeemableCount={userDetail?.redeemableCount ?? 0}
+                  userDetail={userDetail}
                 />
 
                 {
@@ -862,7 +797,7 @@ export default function DashboardPage() {
                     Overview
                   </Text>
                   <Overview
-                    totalUsers={userDetail?.totalUserCount ?? 0}
+                    totalUsers={userDetail?.referralXp ?? 0}
                     referrals={userDetail?.referralCount ?? 0}
                     referralCode={userDetail?.referralCode ?? "REFCOD"}
                     globalRank={userDetail?.globalRank ?? 1000}

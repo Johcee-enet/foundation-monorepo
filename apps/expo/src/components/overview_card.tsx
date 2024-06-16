@@ -49,7 +49,7 @@ export const Overview: FC<IOverviewProps> = ({
 
             <View className="flex flex-row items-center justify-center gap-2">
               {/* <FontAwesome5 name="users" size={14} color="#ABABAB" /> */}
-              <Image
+              {/* <Image
                 source={require("../../assets/main/icons/overview_users.png")}
                 style={{ width: 17, height: 11 }}
                 resizeMode="contain"
@@ -59,7 +59,7 @@ export const Overview: FC<IOverviewProps> = ({
                 className="font-[nunito] text-[#ABABAB]"
               >
                 {totalUsers.toLocaleString("en-US")}
-              </Text>
+              </Text> */}
             </View>
           </View>
           <View className="flex w-full flex-row items-center justify-start gap-20 px-8">

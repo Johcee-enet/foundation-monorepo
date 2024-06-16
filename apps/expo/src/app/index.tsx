@@ -155,6 +155,7 @@ export default function Register() {
                         const user = await loginUser({ email, password });
                         const userId = user?._id;
                         // Store data to local storage
+                        storeData("@enet-store/isOnboarded", true);
                         storeData("@enet-store/user", {
                           email,
                           userId,

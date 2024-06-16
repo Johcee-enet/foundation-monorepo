@@ -8,8 +8,9 @@ import { ConvexProvider, ConvexReactClient } from "convex/react";
 
 import "react-native-get-random-values";
 
-import React, { useEffect } from "react";
-import { Alert, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Text, View } from "react-native";
+import LoadingModal from "@/components/loading_modal";
 // import LoadingModal from "@/components/loading_modal";
 import { getData, removeData } from "@/storageUtils";
 import { Env } from "@env";
@@ -28,6 +29,8 @@ export default function Layout() {
   // const loginTwiitter = useAction(api.onboarding.loginTwitterUser);
   // const [isTwitterAuthLoading, setTwitterAuthLoading] =
   //   useState<boolean>(false);
+  const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(true);
+
   useEffect(() => {
     // Check if user is logged in
     onFetchUpdateAsync().catch((result) =>
@@ -67,6 +70,7 @@ export default function Layout() {
         console.log(isOnboarded, ":::Onboarded value");
         if (!isOnboarded) {
           // setUserIsOnbaorded(false);
+          console.log(isOnboarded, ":::User has been onboarded");
           return;
         } else {
           // Check for user object and twitter auth
@@ -78,48 +82,13 @@ export default function Layout() {
           console.log(token, token, ":::Token");
           console.log(user, ":::User to trigger login for");
           if (user && token) {
+            setIsLoadingVisible(false);
             router.replace({
               pathname: "/(main)/dashboard",
               params: { ...user },
             });
-          }
-          // else if (!user && token) {
-          //   // setTwitterAuthLoading(true);
-          //   // If token object is available then refresh the token and fetch new user details
-          //   console.log(token, ":::Stored token");
-
-          //   // Get user token and fetch user data
-          //   const userData = await Twitter.userData({ token: token?.access });
-          //   console.log(userData, ":::User data");
-
-          //   if (!userData) {
-          //     // setTwitterAuthLoading(false);
-          //     Alert.alert("Failed to authenticate and login user");
-          //     return;
-          //   }
-
-          //   console.log(userData?.data?.username);
-
-          //   // const user: Doc<"user"> | undefined = await loginTwiitter({
-          //   //   nickname: userData?.data?.username,
-          //   // });
-
-          //   // storeData("@enet-store/user", {
-          //   //   userId: user?._id,
-          //   //   nickname: userData?.data?.username.trim(),
-          //   // });
-
-          //   // setTwitterAuthLoading(false);
-
-          //   router.push({
-          //     pathname: "/(main)/dashboard",
-          //     params: {
-          //       userId: user?._id,
-          //       nickname: userData?.data?.username.trim(),
-          //     },
-          //   });
-          // }
-          else if (user && !token) {
+          } else if (user && !token) {
+            setIsLoadingVisible(false);
             router.replace({
               pathname: "/(main)/dashboard",
               params: { ...user },
@@ -140,17 +109,28 @@ export default function Layout() {
   // Handle user auto authentication after user data has been stored
 
   return (
-    <ErrorBoundary>
-      <ConvexProvider client={convex}>
-        <Stack
-          initialRouteName="/(onboarding)/"
-          // initialRouteName="tasks"
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-          <Stack.Screen name="(main)" options={{ headerShown: false }} />
+    <>
+      <LoadingModal
+        isLoadingModalVisible={isLoadingVisible}
+        setLoadingModalVisible={setIsLoadingVisible}
+        tapToClose
+      >
+        <ActivityIndicator size={"large"} />
+      </LoadingModal>
+      <ErrorBoundary>
+        <ConvexProvider client={convex}>
+          <Stack
+            initialRouteName="/(onboarding)/"
+            // initialRouteName="tasks"
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen
+              name="(onboarding)"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="(main)" options={{ headerShown: false }} />
 
-          {/* <LoadingModal
+            {/* <LoadingModal
           isLoadingModalVisible={isTwitterAuthLoading}
           setLoadingModalVisible={setTwitterAuthLoading}
         >
@@ -159,13 +139,12 @@ export default function Layout() {
             <Text>Authorizing your twitter account...</Text>
           </View>
         </LoadingModal> */}
-        </Stack>
-      </ConvexProvider>
-    </ErrorBoundary>
+          </Stack>
+        </ConvexProvider>
+      </ErrorBoundary>
+    </>
   );
 }
-
-
 
 class ErrorBoundary extends React.Component {
   constructor(props: any) {
@@ -178,7 +157,6 @@ class ErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
-
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.log(error, errorInfo, ":::error occurred on the app");
     // Clear state and re-direct to onboarding
@@ -189,17 +167,17 @@ class ErrorBoundary extends React.Component {
     router.replace("/(onboarding)/");
   }
 
-
   render() {
     // @ts-ignore
     if (this.state?.hasError) {
       return (
-        <View className="p-2 flex items-center justify-center">
-          <Text className="text-white font-bolder text-lg">An error occurred while using the app</Text>
+        <View className="flex items-center justify-center p-2">
+          <Text className="font-bolder text-lg text-white">
+            An error occurred while using the app
+          </Text>
         </View>
-      )
+      );
     }
-
 
     // @ts-ignore
     return this.props.children;

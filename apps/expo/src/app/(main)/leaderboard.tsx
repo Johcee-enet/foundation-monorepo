@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   // Platform,
@@ -16,6 +18,7 @@ import {
 import { Image } from "expo-image";
 import { Stack, useLocalSearchParams } from "expo-router";
 import Header from "@/components/header";
+import LoadingModal from "@/components/loading_modal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useQuery } from "convex/react";
@@ -25,6 +28,7 @@ import { api } from "@acme/api/convex/_generated/api";
 
 export default function LeaderboardPage() {
   const params = useLocalSearchParams();
+  const [isLoaderVisible, setIsLoaderVisible] = useState<boolean>(true);
 
   const { top, bottom } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -35,12 +39,25 @@ export default function LeaderboardPage() {
 
   console.log(params, ":::Params for the leaderboard q.lifeee@gmail.com");
 
+  useEffect(() => {
+    if (typeof data !== "undefined") {
+      setIsLoaderVisible(false);
+    }
+  }, [data, isLoaderVisible, setIsLoaderVisible]);
+
   return (
     <SafeAreaView
       className="bg-background"
       edges={["right", "bottom", "left"]}
       style={{ flex: 1, backgroundColor: "yellow" }}
     >
+      <LoadingModal
+        tapToClose={false}
+        isLoadingModalVisible={isLoaderVisible}
+        setLoadingModalVisible={setIsLoaderVisible}
+      >
+        <ActivityIndicator size={"large"} />
+      </LoadingModal>
       <KeyboardAvoidingView behavior={"position"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
@@ -49,7 +66,7 @@ export default function LeaderboardPage() {
           >
             <View
               style={{ height: 90, bottom: 90 - Math.max(bottom, 17) }}
-              className="absolute left-0 right-0 z-50 mx-3 flex flex-row items-center justify-between gap-2 rounded-lg bg-[#ABABAB] px-6"
+              className="absolute left-0 right-0 z-50 mx-3 flex flex-row items-center justify-start gap-2 rounded-lg bg-[#ABABAB] px-6"
             >
               <View className="h-12 w-12 items-center justify-center rounded-full bg-black">
                 <Image
@@ -58,7 +75,10 @@ export default function LeaderboardPage() {
                 />
               </View>
 
-              <View className="flex flex-col gap-4">
+              <View
+                className="flex flex-col gap-4"
+                style={{ marginHorizontal: 20 }}
+              >
                 <View className="flex flex-row items-center justify-between gap-8">
                   <Text className="font-[nunito] text-white">Referrals</Text>
                   <Text className="font-[nunito] text-white">
@@ -79,18 +99,18 @@ export default function LeaderboardPage() {
                 </View>
               </View>
 
+              <View className="flex-1" />
+
               <View className="flex flex-col gap-2">
-                <Text className="font-[nunito] text-white">
-                  Position | Members
-                </Text>
+                <Text className="font-[nunito] text-white">Position</Text>
                 <View className="flex flex-row items-center justify-between gap-8 rounded-md bg-white px-6 py-2">
                   <Text className="font-[nunito] font-medium text-black">
                     {(data ? data.globalRank : 0).toLocaleString("en-US")}
                   </Text>
-                  <Text>|</Text>
+                  {/* <Text>|</Text>
                   <Text className="font-[nunito] font-medium text-black">
                     {(data ? data.totalUsers : 0).toLocaleString("en-US")}
-                  </Text>
+                  </Text> */}
                 </View>
               </View>
             </View>

@@ -82,7 +82,7 @@ export default function ReferralPage() {
                 <TouchableOpacity
                   onPress={async () => {
                     await copyToClipboard();
-                    Alert.alert("Link copied to clipboard");
+                    Alert.alert("Code copied to clipboard");
                   }}
                   className="flex w-36 flex-row items-center justify-center gap-2 rounded-lg bg-black py-3"
                 >
