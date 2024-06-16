@@ -111,7 +111,7 @@ const Item: FC<{
               if (completedTask) {
                 e.preventDefault();
               } else {
-                await delay(5);
+                await delay(2);
                 setDialogOpen(true);
               }
             }}
