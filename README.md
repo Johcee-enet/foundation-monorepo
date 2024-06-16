@@ -245,3 +245,17 @@ Deploying your Expo application works slightly differently compared to Next.js o
 The stack originates from [create-t3-app](https://github.com/t3-oss/create-t3-app).
 
 A [blog post](https://jumr.dev/blog/t3-turbo) where I wrote how to migrate a T3 app into this.
+
+
+
+# Issue tracker and updates
+
+The following issues where reported on both the webapp, mobile app and the admin dashboard
+
+- [ ] Uploading image error in events page of admin dashboard
+- [ ] Onboarding issue where user gets no nickname
+- [ ] XP points exploit
+- [ ] Google adSense integration
+- [ ] Login persistence on the mobile app
+- [ ] Make qulaity of life updates on the mobile app as well
+- [ ] Integrate notification ssystem for the mobile app

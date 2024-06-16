@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@convex-dev/convex-lucia-auth": "0.0.4",
+    "@convex-dev/convex-lucia-auth": "^0.0.5",
     "@novu/node": "^0.24.0",
     "@trpc/server": "11.0.0-next.320",
     "bcryptjs": "^2.4.3",

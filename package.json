@@ -28,5 +28,9 @@
     "lint:ws": "bunx sherif@latest",
     "typecheck": "turbo typecheck"
   },
-  "workspaces": ["apps/*", "packages/*", "tooling/*"]
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tooling/*"
+  ]
 }

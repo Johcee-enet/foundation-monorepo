@@ -17,9 +17,11 @@ export default function ConvexClientProvider({
 }) {
   return (
     <AfterSSR>
-      <ConvexProvider client={convex}>
-        <SessionProvider>{children}</SessionProvider>
-      </ConvexProvider>
+      <SessionProvider>
+        <ConvexProvider client={convex}>
+          {children}
+        </ConvexProvider>
+      </SessionProvider>
     </AfterSSR>
   );
 }
