@@ -10,5 +10,5 @@ declare namespace Lucia {
 }
 
 declare namespace ConvexLuciaAuth {
-  type DataModel = import("./_generated/dataModel").DataModel;
-}
+    type DataModel = import("./_generated/dataModel").DataModel;
+  }
