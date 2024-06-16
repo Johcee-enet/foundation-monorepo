@@ -60,8 +60,8 @@ const HistoryItem: FC<{ activities: Doc<"activity">[] | undefined }> = ({
 
   return (
     <ul className="space-y-2">
-      {!!activities.length && activities.map((history) => (
-        <li className="history-event">
+      {!!activities.length && activities.map((history, ki) => (
+        <li className="history-event" key={ki}>
           <div className="flex items-start gap-3">
             <div
               className={`p-2 text-3xl ${history.type == "xp" && "bg-[#E2DEF0] text-[#5F37E6]"

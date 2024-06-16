@@ -28,7 +28,7 @@ const Tasks: FC<{ userId: string | null }> = ({ userId }) => {
     userId: (session?.userId ?? userId) as Id<"user">,
   });
 
-  const config = useQuery(api.queries.getAppConfigForApp);
+  // const config = useQuery(api.queries.getAppConfigForApp);
 
   return (
     <div>
@@ -66,6 +66,7 @@ const TaskItems: FC<{ tasks: Doc<"tasks">[] | undefined; userId: string }> = ({
             <Item
               item={item}
               ki={ki}
+              key={ki}
               completedTask={completedTask}
               collectReward={collectReward}
               userId={userId}

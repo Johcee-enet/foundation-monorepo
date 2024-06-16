@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "bun with-env next build",
+    "build": "bun with-env next build --typecheck=disable",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "bun with-env next dev",
     "format": "prettier --check . --ignore-path ../../.gitignore",

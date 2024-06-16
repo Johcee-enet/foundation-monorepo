@@ -11,7 +11,7 @@ export const signIn = mutationWithAuth({
     password: v.string(),
   },
   handler: async (ctx, { email, password }) => {
-    const session = await signInWithEmailAndPassword(ctx, email, password);
+    const session = await signInWithEmailAndPassword(ctx, email, password, {});
     return session.sessionId;
   },
 });
@@ -22,7 +22,7 @@ export const signUp = mutationWithAuth({
     password: v.string(),
   },
   handler: async (ctx, { email, password }) => {
-    const session = await signUpWithEmailAndPassword(ctx, email, password);
+    const session = await signUpWithEmailAndPassword(ctx, email, password, {});
     return session.sessionId;
   },
 });

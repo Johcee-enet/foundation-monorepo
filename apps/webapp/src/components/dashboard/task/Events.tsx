@@ -74,6 +74,7 @@ const Events: FC<{ userId: string | null }> = ({ userId }) => {
               <EventItem
                 item={item}
                 event={event}
+                key={ki}
                 setIsLoading={setIsLoading}
                 ki={ki}
                 userId={(user?._id ?? userId) as string}
