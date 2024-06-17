@@ -152,7 +152,7 @@ const HeaderNavigation = () => {
           <DropdownMenuItem
             className="drop-down-item"
             onClick={async () => {
-              sessionStorage.removeItem("fd-session");
+              localStorage.removeItem("fd-session");
               router.replace("/authentication");
             }}
           >
