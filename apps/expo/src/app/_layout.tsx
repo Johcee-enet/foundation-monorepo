@@ -70,6 +70,7 @@ export default function Layout() {
         console.log(isOnboarded, ":::Onboarded value");
         if (!isOnboarded) {
           // setUserIsOnbaorded(false);
+          setIsLoadingVisible(false);
           console.log(isOnboarded, ":::User has been onboarded");
           return;
         } else {
@@ -95,7 +96,9 @@ export default function Layout() {
             });
           } else {
             // setUserIsOnbaorded(false);
+            setIsLoadingVisible(false);
             console.log("final stand on the ambush street....");
+            return;
           }
         }
       } catch (e: any) {
