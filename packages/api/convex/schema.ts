@@ -72,6 +72,7 @@ export default defineSchema(
     })
       .index("by_xpCount", ["xpCount"])
       .index("by_email", ["email"])
+      .index("by_email_deleted", ["email", "deleted"])
       .index("by_nickname", ["nickname"])
       .index("by_claimedXp_xpCount", ["claimedXp", "xpCount"])
       .index("by_mineActive", ["mineActive"])

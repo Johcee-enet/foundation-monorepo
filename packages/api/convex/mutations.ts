@@ -17,7 +17,7 @@ export const storeEmail = internalMutation({
   handler: async (ctx, args) => {
     const config = await ctx.db.query("config").first();
     // Check if email already exists
-    const existingUsers = await ctx.db.query("user").collect();
+    const existingUsers = await ctx.db.query("user").withIndex("by_email", q => q.eq("email", args.email)).collect();
 
     // Checking if the users email already exists without being deleted
     if (
@@ -33,13 +33,10 @@ export const storeEmail = internalMutation({
     // Fetch dangling user details after deleted account
     const previouslyDeleted = await ctx.db
       .query("user")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("email"), args.email),
-          q.eq(q.field("deleted"), true),
-        ),
+      .withIndex("by_email_deleted", (q) =>
+          q.eq("email", args.email).eq("deleted", true),
       )
-      .first();
+      .unique();
 
     // If user was previously deleted update fields
     if (previouslyDeleted) {

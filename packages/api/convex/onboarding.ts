@@ -23,19 +23,19 @@ export const initializeNewUser = action({
     );
 
     // DONE:✅ Create OTP
-    const otp = generateOTPCode();
+    // const otp = generateOTPCode();
 
-    await ctx.runMutation(internal.mutations.storeOTPSecret, {
-      userId,
-      secret: otp ?? generateOTPCode(),
-    });
+    // await ctx.runMutation(internal.mutations.storeOTPSecret, {
+    //   userId,
+    //   secret: otp ?? generateOTPCode(),
+    // });
 
-    // DONE:✅ call novu action
-    await ctx.runAction(internal.novu.triggerOTPWorkflow, {
-      otp: otp ?? generateOTPCode(),
-      userId: userId,
-      email: args.email,
-    });
+    // // DONE:✅ call novu action
+    // await ctx.runAction(internal.novu.triggerOTPWorkflow, {
+    //   otp: otp ?? generateOTPCode(),
+    //   userId: userId,
+    //   email: args.email,
+    // });
 
     return userId;
   },
