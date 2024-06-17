@@ -7,6 +7,8 @@ import type { Viewport } from "next";
 import ConvexClientProvider from "@/app/ConvexClientProvider";
 import { Toaster } from "@/components/ui/toaster";
 import SessionProvider from "@/lib/sessionContext";
+import Script from "next/script";
+import Head from "next/head";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
@@ -34,6 +36,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script async src={"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6929781309402895"} crossOrigin="anonymous" strategy="afterInteractive" />
+      </head>
       <body
         className={cn(
           "background min-h-screen font-sans antialiased",

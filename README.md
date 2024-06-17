@@ -254,8 +254,10 @@ The following issues where reported on both the webapp, mobile app and the admin
 
 - [x] Uploading image error in events page of admin dashboard
 - [ ] Onboarding issue where user gets no nickname
+- [ ] Get leaderboard query prefilling array of records with empty slots
 - [ ] XP points exploit
-- [ ] Google adSense integration
-- [ ] Login persistence on the mobile app
-- [ ] Make qulaity of life updates on the mobile app as well
+- [x] Google adSense integration
+   - [ ] Admob integration for mobile app
+- [x] Login persistence on the mobile app
+- [x] Make qulaity of life updates on the mobile app as well
 - [ ] Integrate notification ssystem for the mobile app

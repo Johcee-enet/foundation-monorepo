@@ -18,6 +18,7 @@ import type { Doc, Id } from "@acme/api/convex/_generated/dataModel";
 import { api } from "@acme/api/convex/_generated/api";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Loader } from "@/components/loader";
+import AdBanner from "@/components/dashboard/AdBanner";
 
 export type EventType = Partial<Doc<"events">> & {
   company: Partial<Doc<"company">> & { logoUrl: string };
@@ -114,6 +115,7 @@ const Dashboard = () => {
       </div>
       <PlannedTask userDetail={userDetail} userId={userId} />
       <TwitterProfile />
+      <AdBanner dataAdSlot="2550264144" dataAdFormat="auto" dataFullWidthResponsive={true} />
       {/* <ClaimXP /> */}
     </main>
   );
