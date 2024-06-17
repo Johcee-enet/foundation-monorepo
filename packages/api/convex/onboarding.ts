@@ -223,7 +223,7 @@ export const storeNickname = mutation({
           .withIndex("by_referreeCode", (q) =>
             q.eq("referralCode", user?.referreeCode?.toUpperCase()),
           )
-          .unique();
+          .first();
 
         if (referree) {
           // Patch referree count
