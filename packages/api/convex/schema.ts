@@ -71,6 +71,7 @@ export default defineSchema(
       lastActive: v.optional(v.number()),
     })
       .index("by_xpCount", ["xpCount"])
+      .index("by_referreeCode", ["referralCode"])
       .index("by_email", ["email"])
       .index("by_email_deleted", ["email", "deleted"])
       .index("by_nickname", ["nickname"])

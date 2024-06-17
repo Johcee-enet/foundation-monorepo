@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 type ISession = {
   userId: string | null;
@@ -21,14 +21,20 @@ interface SessionProps {
 }
 export default function SessionProvider({ children }: SessionProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [session, setSession] = useState<{ userId: string | null } | null>(
     null,
   );
   useEffect(() => {
     const _session = localStorage.getItem("fd-session");
-    if (_session) {
-      setSession(JSON.parse(_session));
-      router.replace("/dashboard");
+    if (_session && !pathname.includes("authentication")) {
+      const session = JSON.parse(_session);
+      if (session?.isOnboarded) {
+        setSession(session);
+        router.replace("/dashboard");
+      } else {
+        router.replace("/authentication")
+      }
     } else {
       router.replace("/authentication")
     }

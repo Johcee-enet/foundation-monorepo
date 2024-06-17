@@ -61,7 +61,7 @@ const Authentication = ({ login, refCode }: any) => {
         // Set session before pushing
         localStorage.setItem(
           "fd-session",
-          JSON.stringify({ userId: user?._id }),
+          JSON.stringify({ userId: user?._id, isOnboarded: true}),
         );
         router.push(`/dashboard?userId=${user?._id}`);
       } else {
@@ -73,7 +73,7 @@ const Authentication = ({ login, refCode }: any) => {
         // Set session before pushing
         localStorage.setItem(
           "fd-session",
-          JSON.stringify({ userId: userId }),
+          JSON.stringify({ userId: userId, isOnboarded: false }),
         );
         // toast({
         //   title: "Onboarding",

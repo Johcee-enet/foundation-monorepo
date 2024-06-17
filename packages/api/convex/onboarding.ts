@@ -220,10 +220,10 @@ export const storeNickname = mutation({
         // Get new user data
         const referree = await ctx.db
           .query("user")
-          .filter((q) =>
-            q.eq(q.field("referralCode"), user?.referreeCode?.toUpperCase()),
+          .withIndex("by_referreeCode", (q) =>
+            q.eq("referralCode", user?.referreeCode?.toUpperCase()),
           )
-          .first();
+          .unique();
 
         if (referree) {
           // Patch referree count
