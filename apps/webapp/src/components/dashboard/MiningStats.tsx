@@ -50,7 +50,7 @@ const MiningStats: FC<Mining> = ({ mined, mining, mineHours, time, rate, userId,
         color: userDetail?.mineActive ? "black" : "white",
       }}
       onClick={async () => {
-        if (!userDetail?.redeemableCount) {
+        if (userDetail && userDetail.redeemableCount <= 0 && !userDetail?.mineActive) {
           await triggerMiner({
             userId: (session?.userId ?? userId) as Id<"user">,
           });
@@ -64,13 +64,13 @@ const MiningStats: FC<Mining> = ({ mined, mining, mineHours, time, rate, userId,
         }
       }}
     >
-      {!userDetail?.redeemableCount && (
+      {userDetail && userDetail?.redeemableCount <= 0 && !userDetail?.mineActive && (
         <>
           Start Mining <BiCoinStack className="shrink-0" />
         </>
       )}
 
-      {userDetail?.redeemableCount && (
+      {userDetail && userDetail?.redeemableCount > 0 && !userDetail?.mineActive && (
         <>
           Claim $FOUND {userDetail?.redeemableCount ?? 0}{" "}
           <BiCoinStack className="shrink-0" />
@@ -85,7 +85,7 @@ const MiningStats: FC<Mining> = ({ mined, mining, mineHours, time, rate, userId,
   return (
     <div className="mining-stats">
       <h3 className="text-lg">
-        $FOUND Mined: <span>{mined}</span>
+        $FOUND Mined: <span>{mined.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
       </h3>
       <p>Mining: {mining.toFixed(4)}</p>
       <p>{time}</p>
@@ -93,7 +93,7 @@ const MiningStats: FC<Mining> = ({ mined, mining, mineHours, time, rate, userId,
         <div className="tag">
           Mining rate : <span className="font-normal">{rate} FOUND/hr</span>
         </div>
-      <MineButton />
+        <MineButton />
       </div>
     </div>
   );

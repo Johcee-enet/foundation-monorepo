@@ -13,7 +13,7 @@ import { Doc, Id } from "@acme/api/convex/_generated/dataModel";
 
 const History = () => {
   const session = useSession();
-  const activities: Doc<"activity">[] | undefined = useQuery(
+  const activities: Doc<"activity">[] | null | undefined = useQuery(
     api.queries.getHistory,
     {
       userId: session?.userId as Id<"user">,
@@ -27,9 +27,10 @@ const History = () => {
       <ReturnHeader page="history" push="/dashboard" />
       <div className="history-content">
         <h4 className="mb-4 text-lg">Today</h4>
-        <Suspense fallback={<Loader color="white" />}>
-          <HistoryItem activities={activities} />
-        </Suspense>
+        {
+          typeof activities === "undefined" && <Loader color="white" />
+        }
+        {typeof activities !== "undefined" && <HistoryItem activities={activities} />}
       </div>
     </main>
   );
@@ -40,18 +41,9 @@ export default History;
 const HistoryItem: FC<{ activities: Doc<"activity">[] | undefined }> = ({
   activities,
 }) => {
-  if (!activities) {
-
-    return (
-      <div>
-        <Loader color="white" />
-
-      </div>
-    )
-  }
 
 
-  if (activities.length === 0) {
+  if (activities && activities.length === 0) {
     return (
       <span className="text-lg text-center my-auto mx-auto text-white">No recorded history yet</span>
     )
@@ -60,7 +52,7 @@ const HistoryItem: FC<{ activities: Doc<"activity">[] | undefined }> = ({
 
   return (
     <ul className="space-y-2">
-      {!!activities.length && activities.map((history, ki) => (
+      {activities && activities.map((history, ki) => (
         <li className="history-event" key={ki}>
           <div className="flex items-start gap-3">
             <div
