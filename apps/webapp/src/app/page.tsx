@@ -19,6 +19,9 @@ export default function Home() {
   useEffect(() => {
     console.log(isClient, ":::check if it is client");
     if (isClient) {
+      if (typeof window !== "undefined") {
+        WebApp.expand();
+      }
 
       setTimeout(() => {
 
@@ -28,7 +31,6 @@ export default function Home() {
             // @ts-ignore
             console.log(WebApp, ":::Telegram embeds");
             console.log("Inside telegram webview");
-            WebApp.expand();
             return;
 
           } else {
