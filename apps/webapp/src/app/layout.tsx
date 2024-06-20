@@ -37,8 +37,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script async src={"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6929781309402895"} crossOrigin="anonymous" strategy="afterInteractive" />
-        <Script src={"https://telegram.org/js/telegram-web-app.js"} />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6929781309402895" crossOrigin="anonymous"></script>
+        <script src="https://telegram.org/js/telegram-web-app.js"></script>
       </head>
       <body
         className={cn(
