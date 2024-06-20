@@ -23,14 +23,12 @@ export default function Home() {
       setTimeout(() => {
 
         if (typeof window !== "undefined") {
-          if (WebApp.initData.length) {
+          if (!!WebApp.initData.length || "WebApp" in window.Telegram) {
             // @ts-ignore
             // @ts-ignore
             console.log(WebApp, ":::Telegram embeds");
             console.log("Inside telegram webview");
-            if (!WebApp.isExpanded) {
-              WebApp.expand();
-            }
+            WebApp.expand();
             return;
 
           } else {
@@ -42,7 +40,7 @@ export default function Home() {
 
           }
         }
-      }, 5000);
+      }, 10000);
     }
   }, [isClient]);
 
