@@ -8,45 +8,8 @@ import { MainButton } from "@twa-dev/sdk/react";
 import { useClient } from "@/lib/mountContext";
 
 export default function Home() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const ref = searchParams.get("ref");
+  // const router = useRouter();
   const isClient = useClient();
-
-
-  console.log("Client check from main page", isClient);
-
-  useEffect(() => {
-    console.log(isClient, ":::check if it is client");
-    if (isClient) {
-      if (typeof window !== "undefined") {
-        WebApp.expand();
-      }
-
-      setTimeout(() => {
-
-        if (typeof window !== "undefined") {
-          if (!!WebApp.initData.length || "WebApp" in window.Telegram) {
-            // @ts-ignore
-            // @ts-ignore
-            console.log(WebApp, ":::Telegram embeds");
-            console.log("Inside telegram webview");
-            return;
-
-          } else {
-            if (ref) {
-              router.push(`/authentication?ref=${ref}`);
-            } else {
-              router.push("/authentication");
-            }
-
-          }
-        }
-      }, 10000);
-    }
-  }, [isClient]);
-
-
 
   return (
     <main className="flex flex-col items-center justify-center gap-24 min-h-screen">

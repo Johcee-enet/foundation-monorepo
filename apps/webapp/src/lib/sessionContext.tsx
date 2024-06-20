@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useClient } from "./mountContext";
 import WebApp from "@twa-dev/sdk";
 
@@ -23,6 +23,9 @@ interface SessionProps {
 export default function SessionProvider({ children }: SessionProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const ref = searchParams.get("ref");
+
   const [session, setSession] = useState<{ userId: string | null } | null>(
     null,
   );
@@ -30,25 +33,39 @@ export default function SessionProvider({ children }: SessionProps) {
 
   useEffect(() => {
     // @ts-ignore
-    if (isClient && typeof widnow !== "undefined" && WebApp.initData.length) {
+    if (isClient && typeof window !== "undefined") {
       console.log("Check from session provider");
-      return;
-    } else {
-      const _session = localStorage.getItem("fd-session");
-      if (_session && !pathname.includes("authentication")) {
-        const session = JSON.parse(_session);
-        if (session?.isOnboarded) {
-          setSession(session);
-          router.replace("/dashboard");
-        } else {
-          router.replace("/authentication")
-        }
-      } else {
-        router.replace("/authentication")
-      }
+      WebApp.expand();
 
+      setTimeout(() => {
+        if (("WebApp" in window.Telegram && WebApp.initData.length)) {
+          console.log(WebApp, ":::Telegram embeds");
+          console.log("inside telegram webview");
+          return;
+        } else {
+          const _session = localStorage.getItem("fd-session");
+          if (_session && !pathname.includes("authentication")) {
+            const session = JSON.parse(_session);
+            if (session?.isOnboarded) {
+              setSession(session);
+              router.replace("/dashboard");
+            } else {
+              router.replace("/authentication")
+            }
+          } else {
+            router.replace("/authentication")
+          }
+
+          // if (ref) {
+          //   router.push(`/authentication?ref=${ref}`);
+          // } else {
+          //   router.push("/authentication");
+          // }
+        }
+
+      }, 4000);
     }
-  }, [router]);
+  }, [router, isClient]);
 
   return (
     <SessionContext.Provider
