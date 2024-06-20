@@ -38,6 +38,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script async src={"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6929781309402895"} crossOrigin="anonymous" strategy="afterInteractive" />
+        <Script src={"https://telegram.org/js/telegram-web-app.js"} />
       </head>
       <body
         className={cn(

@@ -40,7 +40,7 @@ const Overview = (props: OverviewContent) => {
           </div>
           <div>
             <span className="text-lg text-[#ABABAB]">Global Rank</span>
-            <h2 className="mt-1 text-4xl text-white flex items-center">{props.rank}{props.rank >= 50? '+' : null}</h2>
+            <h2 className="mt-1 text-4xl text-white flex items-center">{props.rank}{props.rank >= 50 ? '+' : null}</h2>
           </div>
         </div>
         <CopyToClipboard
@@ -52,9 +52,10 @@ const Overview = (props: OverviewContent) => {
             });
           }}
         >
-          <button className="mt-auto flex items-center gap-1 text-left text-base text-white">
+          <button className="mt-auto flex items-center gap-1 text-left text-base text-white w-full">
             <span className="shrink-0">Referral Link:</span>{" "}
-            {props.referralCode} <BsCopy />
+            <span className="truncate text-ellipsis flex items-center">{props.referralCode}</span>
+            <BsCopy  />
           </button>
         </CopyToClipboard>
       </div>
