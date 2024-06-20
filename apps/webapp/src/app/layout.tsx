@@ -11,6 +11,7 @@ import Script from "next/script";
 import Head from "next/head";
 import { cn } from "@/lib/utils";
 
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -38,7 +39,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6929781309402895" crossOrigin="anonymous"></script>
-        <script src="https://telegram.org/js/telegram-web-app.js"></script>
+        <script async src="https://telegram.org/js/telegram-web-app.js"></script>
       </head>
       <body
         className={cn(

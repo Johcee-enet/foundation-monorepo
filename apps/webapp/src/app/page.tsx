@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react";
+import WebApp from "@twa-dev/sdk";
 
 export default function Home() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     // @ts-ignore
-    console.log(window.Telegram, ":::Telegram embeds");
+    console.log(WebApp, ":::Telegram embeds");
     // if the person is logining in for the first time it should check if its an existing user to push either to dashboard or login
     setTimeout(() => {
       if (ref) {
