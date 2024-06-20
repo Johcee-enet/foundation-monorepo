@@ -23,25 +23,28 @@ export default function Home() {
       setTimeout(() => {
 
         if (typeof window !== "undefined") {
-          // @ts-ignore
-          // @ts-ignore
-          console.log(WebApp, ":::Telegram embeds");
-          console.log("Inside telegram webview");
-          if (!WebApp.isExpanded) {
-            WebApp.expand();
-          }
-          return;
-        } else {
-          if (ref) {
-            router.push(`/authentication?ref=${ref}`);
-          } else {
-            router.push("/authentication");
-          }
+          if (WebApp.initData.length) {
+            // @ts-ignore
+            // @ts-ignore
+            console.log(WebApp, ":::Telegram embeds");
+            console.log("Inside telegram webview");
+            if (!WebApp.isExpanded) {
+              WebApp.expand();
+            }
+            return;
 
+          } else {
+            if (ref) {
+              router.push(`/authentication?ref=${ref}`);
+            } else {
+              router.push("/authentication");
+            }
+
+          }
         }
-      }, 3000);
+      }, 5000);
     }
-  }, []);
+  }, [isClient]);
 
 
 
