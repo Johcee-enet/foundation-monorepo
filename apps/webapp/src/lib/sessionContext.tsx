@@ -1,6 +1,5 @@
 "use client";
 
-import { AsyncHook } from "async_hooks";
 import {
   createContext,
   ReactNode,
@@ -9,6 +8,8 @@ import {
   useState,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useClient } from "./mountContext";
+import WebApp from "@twa-dev/sdk";
 
 type ISession = {
   userId: string | null;
@@ -25,9 +26,11 @@ export default function SessionProvider({ children }: SessionProps) {
   const [session, setSession] = useState<{ userId: string | null } | null>(
     null,
   );
+  const isClient = useClient();
+
   useEffect(() => {
     // @ts-ignore
-    if (window && "WebApp" in window.Telegram) {
+    if (isClient && typeof widnow !== "undefined" && WebApp.initData.length) {
       console.log("Check from session provider");
       return;
     } else {

@@ -4,34 +4,43 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import WebApp from "@twa-dev/sdk";
-import {MainButton} from "@twa-dev/sdk/react";
+import { MainButton } from "@twa-dev/sdk/react";
+import { useClient } from "@/lib/mountContext";
 
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref");
+  const isClient = useClient();
+
+
+  console.log("Client check from main page", isClient);
 
   useEffect(() => {
-    // @ts-ignore
-    console.log(WebApp, window.Telegram, ":::Telegram embeds");
-    // if the person is logining in for the first time it should check if its an existing user to push either to dashboard or login
-    setTimeout(() => {
+    console.log(isClient, ":::check if it is client");
+    if (isClient) {
 
-      // @ts-ignore
-      if ("WebApp" in window?.Telegram) {
-        console.log("Inside telegram webview");
-        if(!WebApp.isExpanded) {
-          WebApp.expand();
-        }
-        return;
-      } else {
-        if (ref) {
-          router.push(`/authentication?ref=${ref}`);
+      setTimeout(() => {
+
+        if (typeof window !== "undefined") {
+          // @ts-ignore
+          // @ts-ignore
+          console.log(WebApp, ":::Telegram embeds");
+          console.log("Inside telegram webview");
+          if (!WebApp.isExpanded) {
+            WebApp.expand();
+          }
+          return;
         } else {
-          router.push("/authentication");
+          if (ref) {
+            router.push(`/authentication?ref=${ref}`);
+          } else {
+            router.push("/authentication");
+          }
+
         }
-      }
-    }, 3000);
+      }, 3000);
+    }
   }, []);
 
 
@@ -66,10 +75,13 @@ export default function Home() {
           className="invert dark:invert-0"
         />
       </div>
-    <MainButton text="Authorize app" onClick={() => {
-      console.log(WebApp.initData, ":::Init data");
-      WebApp.showPopup({title: "User init data", message: WebApp.initData}, (id) => console.log("Dialog ID", id));
-    }} />
+      {
+        isClient && (typeof window !== "undefined") &&
+        <MainButton text="Authorize app" onClick={() => {
+          console.log(WebApp.initData, ":::Init data");
+          WebApp.showPopup({ title: "User init data", message: WebApp.initData }, (id) => console.log("Dialog ID", id));
+        }} />
+      }
     </main>
   );
 }

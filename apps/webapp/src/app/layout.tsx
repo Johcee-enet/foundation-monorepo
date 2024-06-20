@@ -11,8 +11,16 @@ import ConvexClientProvider from "@/app/ConvexClientProvider";
 import { Toaster } from "@/components/ui/toaster";
 import SessionProvider from "@/lib/sessionContext";
 import Script from "next/script";
-import Head from "next/head";
 import { cn } from "@/lib/utils";
+import { MountCtxProvider } from "@/lib/mountContext";
+import { Telegram } from "@twa-dev/types";
+
+
+declare global {
+  interface Window {
+    Telegram: Telegram;
+  }
+}
 
 
 const fontSans = FontSans({
@@ -53,7 +61,9 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ConvexClientProvider>
-            <SessionProvider>{children}</SessionProvider>
+            <MountCtxProvider>
+              <SessionProvider>{children}</SessionProvider>
+            </MountCtxProvider>
           </ConvexClientProvider>
           <Toaster />
         </ThemeProvider>
