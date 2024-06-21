@@ -5,10 +5,8 @@ import { differenceInHours } from "date-fns";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
-  action,
   internalAction,
   internalMutation,
-  internalQuery,
   mutation,
 } from "./_generated/server";
 
@@ -17,7 +15,10 @@ export const storeEmail = internalMutation({
   handler: async (ctx, args) => {
     const config = await ctx.db.query("config").first();
     // Check if email already exists
-    const existingUsers = await ctx.db.query("user").withIndex("by_email", q => q.eq("email", args.email)).collect();
+    const existingUsers = await ctx.db
+      .query("user")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .collect();
 
     // Checking if the users email already exists without being deleted
     if (
@@ -34,7 +35,7 @@ export const storeEmail = internalMutation({
     const previouslyDeleted = await ctx.db
       .query("user")
       .withIndex("by_email_deleted", (q) =>
-          q.eq("email", args.email).eq("deleted", true),
+        q.eq("email", args.email).eq("deleted", true),
       )
       .unique();
 
@@ -389,44 +390,44 @@ export const updateEventsForUser = mutation({
       await db.patch(userId, {
         eventsJoined: user.eventsJoined
           ? [
-            ...user.eventsJoined,
-            {
-              eventId: event._id,
-              completed: false,
-              actions: event.actions.map((action) => {
-                if (action.name === actionName) {
-                  return {
-                    completed: true,
-                    link: action.link,
-                    channel: action.channel,
-                    name: action.name,
-                    type: action.type,
-                  };
-                } else {
-                  return { ...action, completed: false };
-                }
-              }),
-            },
-          ]
+              ...user.eventsJoined,
+              {
+                eventId: event._id,
+                completed: false,
+                actions: event.actions.map((action) => {
+                  if (action.name === actionName) {
+                    return {
+                      completed: true,
+                      link: action.link,
+                      channel: action.channel,
+                      name: action.name,
+                      type: action.type,
+                    };
+                  } else {
+                    return { ...action, completed: false };
+                  }
+                }),
+              },
+            ]
           : [
-            {
-              eventId: event._id,
-              completed: false,
-              actions: event.actions.map((action) => {
-                if (action.name === actionName) {
-                  return {
-                    completed: true,
-                    link: action.link,
-                    channel: action.channel,
-                    name: action.name,
-                    type: action.type,
-                  };
-                } else {
-                  return { ...action, completed: false };
-                }
-              }),
-            },
-          ],
+              {
+                eventId: event._id,
+                completed: false,
+                actions: event.actions.map((action) => {
+                  if (action.name === actionName) {
+                    return {
+                      completed: true,
+                      link: action.link,
+                      channel: action.channel,
+                      name: action.name,
+                      type: action.type,
+                    };
+                  } else {
+                    return { ...action, completed: false };
+                  }
+                }),
+              },
+            ],
       });
     }
   },
@@ -478,56 +479,61 @@ export const deleteAccount = mutation({
 export const triggerMining = mutation({
   args: { userId: v.id("user") },
   handler: async ({ db }, { userId }) => {
-    const config = await db.query("config").first()
+    const config = await db.query("config").first();
     const user = await db.get(userId);
 
     if (!user) {
-      throw new ConvexError({ message: "No user found", code: 500, status: "failed" });
+      throw new ConvexError({
+        message: "No user found",
+        code: 500,
+        status: "failed",
+      });
     }
-
 
     if (user.mineActive) {
       throw new ConvexError({
         message: "You alread have a mining session ongoing",
         code: 401,
-        status: "failed"
-      })
+        status: "failed",
+      });
     }
 
-    await db.patch(userId, { mineActive: true, mineStartTime: Date.now(), ...(!user?.boostStatus?.length && { mineHours: config?.miningHours ?? 6, miningRate: config?.miningCount ?? 2 }) });
-
+    await db.patch(userId, {
+      mineActive: true,
+      mineStartTime: Date.now(),
+      ...(!user?.boostStatus?.length && {
+        mineHours: config?.miningHours ?? 6,
+        miningRate: config?.miningCount ?? 2,
+      }),
+    });
   },
 });
-
 
 export const mine = internalMutation({
   handler: async ({ db }) => {
     const config = await db.query("config").first();
 
-    const users = await db.query("user")
+    const users = await db
+      .query("user")
       .withIndex("by_mineActive", (q) => q.eq("mineActive", true))
       .collect();
-
 
     if (!users.length) {
       return;
     }
 
-
     for (const user of users) {
-      const currentMineHour = differenceInHours(Date.now(), new Date(user.mineStartTime!), {
+      const currentMineHour = differenceInHours(
+        Date.now(),
+        new Date(user.mineStartTime!),
+        {
           roundingMethod: "floor",
-        });
-      if (
-        currentMineHour < user.mineHours
-      ) {
+        },
+      );
+      if (currentMineHour < user.mineHours) {
         await db.patch(user._id, {
-          redeemableCount:
-            user.miningRate *
-            currentMineHour,
-        }
-        );
-
+          redeemableCount: user.miningRate * currentMineHour,
+        });
       } else {
         // Cancel mine and reset also check for active boosts
 
@@ -538,25 +544,17 @@ export const mine = internalMutation({
           (boost: any) => boost?.boostId === botUuid?.uuid,
         );
 
-
         console.log("Should stop the mining session");
 
-        await db.patch(
-          user._id,
-          {
-            mineActive: false,
-            boostStatus: persistBot ? [persistBot] : undefined,
-            // mineHours: config?.miningHours,
-            // miningRate: config?.miningCount,
-            redeemableCount:
-              user.miningRate *
-              currentMineHour,
-          }
-        );
+        await db.patch(user._id, {
+          mineActive: false,
+          boostStatus: persistBot ? [persistBot] : undefined,
+          // mineHours: config?.miningHours,
+          // miningRate: config?.miningCount,
+          redeemableCount: user.miningRate * currentMineHour,
+        });
       }
-
     }
-
   },
 });
 
@@ -736,9 +734,9 @@ export const activateBoost = mutation({
         mineHours: config.miningHours + boost.rate,
         boostStatus: user?.boostStatus
           ? [
-            ...(user?.boostStatus ?? []),
-            { boostId: boost?.uuid, isActive: true },
-          ]
+              ...(user?.boostStatus ?? []),
+              { boostId: boost?.uuid, isActive: true },
+            ]
           : [{ boostId: boost?.uuid, isActive: true }],
       });
 
@@ -751,7 +749,7 @@ export const activateBoost = mutation({
       // If type is speed
       // for speed boosts multiply the initial xpCost by 2 and and increase the users currentLevel
       // Check if the totalLevel has not been passed
-      // Validate that the current xpCost is available in the users xpBalance
+      // Validate that the current xpCost is available in the users
       if (user?.boostStatus && user?.boostStatus.length) {
         // if (user?.boostStatus?.some((stat) => stat.boostId !== boost.uuid)) {
         //   // Add a new object to the array
@@ -838,15 +836,6 @@ export const activateBoost = mutation({
     }
   },
 });
-
-export const updateUserTgObject = internalMutation({
-  args: { userId: v.id("user"), tgUsername: v.string(), tgUserId: v.string() },
-  handler: async ({ db }, { userId, tgUserId, tgUsername }) => {
-    await db.patch(userId, { tgUsername: tgUsername, tgUserId: tgUserId });
-  },
-})
-
-
 
 export function activateMultiplier(currentXpCount: number): number | undefined {
   // Check against array of multiplier values

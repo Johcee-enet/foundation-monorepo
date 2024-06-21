@@ -23,7 +23,6 @@ import type * as mutations from "../mutations.js";
 import type * as novu from "../novu.js";
 import type * as onboarding from "../onboarding.js";
 import type * as queries from "../queries.js";
-import type * as telegram from "../telegram.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -43,7 +42,6 @@ declare const fullApi: ApiFromModules<{
   novu: typeof novu;
   onboarding: typeof onboarding;
   queries: typeof queries;
-  telegram: typeof telegram;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
