@@ -22,7 +22,7 @@ import { api } from "@acme/api/convex/_generated/api";
 import { useToast } from "../ui/use-toast";
 import { formSchema } from "./FormShema";
 
-const Authentication = ({ login, refCode, type }: any) => {
+const Authentication = ({ login, refCode, type, tgInitData }: any) => {
   const router = useRouter();
   const { toast } = useToast();
   // Convex function to mutate lgoin and signup
@@ -57,11 +57,13 @@ const Authentication = ({ login, refCode, type }: any) => {
         const user = await loginUser({
           email: values.email,
           password: values?.password,
+          type: type,
+          tgInitData: tgInitData
         });
         // Set session before pushing
         localStorage.setItem(
           "fd-session",
-          JSON.stringify({ userId: user?._id, isOnboarded: true}),
+          JSON.stringify({ userId: user?._id, isOnboarded: true }),
         );
         router.push(`/dashboard?userId=${user?._id}`);
       } else {
@@ -135,7 +137,7 @@ const Authentication = ({ login, refCode, type }: any) => {
             />
           )}
           <Button className="btn" type="submit">
-            {login ? "Login" : "Sign Up"}
+            {login ? type && type === "tg"? "Link Telegram" : "Login" : "Sign Up"}
           </Button>
         </form>
       </Form>
