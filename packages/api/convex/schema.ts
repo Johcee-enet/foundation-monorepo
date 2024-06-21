@@ -16,6 +16,8 @@ export default defineSchema(
       minedCount: v.optional(v.float64()),
       miningRate: v.float64(),
       nickname: v.optional(v.string()),
+      tgUsername: v.optional(v.string()),
+      tgUserId: v.optional(v.string()),
       otpSecret: v.optional(v.string()),
       password: v.optional(v.string()),
       mineActive: v.boolean(),

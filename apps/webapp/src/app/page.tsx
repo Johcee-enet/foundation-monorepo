@@ -45,7 +45,12 @@ export default function Home() {
         isClient && (typeof window !== "undefined") &&
         <MainButton text="Authorize app" onClick={() => {
           console.log(WebApp.initData, ":::Init data");
-          WebApp.showPopup({ title: "User init data", message: WebApp.initData }, (id) => console.log("Dialog ID", id));
+          WebApp.showPopup({
+            title: "User init data",
+            message: "Link your account if you've previously onboarded on the web or mobile app"
+          },
+            (id) => console.log("Dialog ID", id)
+          );
         }} />
       }
     </main>

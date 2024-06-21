@@ -2,7 +2,7 @@ import { mutationWithAuth } from "@convex-dev/convex-lucia-auth";
 import { ConvexError, v } from "convex/values";
 import { differenceInHours } from "date-fns";
 
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import {
   action,
@@ -190,7 +190,7 @@ export const weeklyLeaderBoardCheck = internalAction({
 
     // Add activities
     await runMutation(internal.mutations.addWeeklyTopRankedActivity, {
-      userIds: weeksTopRankUsers.map((user) => user?._id),
+      userIds: weeksTopRankUsers.map((user: Doc<"user">) => user?._id),
     });
 
     // Send out a mail to top
@@ -838,6 +838,15 @@ export const activateBoost = mutation({
     }
   },
 });
+
+export const updateUserTgObject = internalMutation({
+  args: { userId: v.id("user"), tgUsername: v.string(), tgUserId: v.string() },
+  handler: async ({ db }, { userId, tgUserId, tgUsername }) => {
+    await db.patch(userId, { tgUsername: tgUsername, tgUserId: tgUserId });
+  },
+})
+
+
 
 export function activateMultiplier(currentXpCount: number): number | undefined {
   // Check against array of multiplier values
