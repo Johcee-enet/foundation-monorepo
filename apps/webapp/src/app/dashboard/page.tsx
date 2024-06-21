@@ -35,16 +35,16 @@ const Dashboard = () => {
     userId: (session?.userId ?? userId) as Id<"user"> | undefined,
   });
 
-  const claimReward = useMutation(api.mutations.claimRewards);
+  // const claimReward = useMutation(api.mutations.claimRewards);
 
   // console.log(bottom, top, ":::Bottom Top, size", height, height - top);
 
   // handle tasks cycle
   const [isLoadingModalVisible, setLoadingModalVisible] = useState(typeof userDetail === "undefined"? true : false);
-  const rewardTaskXpCount = useMutation(api.mutations.rewardTaskXp);
-  const rewardEventXpCount = useMutation(api.mutations.rewardEventXp);
-  const updateEventAction = useMutation(api.mutations.updateEventsForUser);
-  const activateBoost = useMutation(api.mutations.activateBoost);
+  // const rewardTaskXpCount = useMutation(api.mutations.rewardTaskXp);
+  // const rewardEventXpCount = useMutation(api.mutations.rewardEventXp);
+  // const updateEventAction = useMutation(api.mutations.updateEventsForUser);
+  // const activateBoost = useMutation(api.mutations.activateBoost);
 
   // refLInk
   const [refLink, setRefLink] = useState<string>();
@@ -78,7 +78,7 @@ const Dashboard = () => {
           <Loader color="white" />
         </DialogContent>
       </Dialog>
-      <Header nickname={userDetail?.nickname} />
+      <Header nickname={userDetail?.tgUsername ?? userDetail?.nickname} />
       <Status
         mineRate={userDetail?.miningRate ?? 0}
         minedCount={userDetail?.minedCount ?? 0}

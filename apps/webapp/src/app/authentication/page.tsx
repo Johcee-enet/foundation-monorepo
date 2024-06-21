@@ -18,16 +18,12 @@ export default function Home() {
   const tgInitData = searchParams.get("initData");
   const router = useRouter();
 
-
-
   console.log(type, tgInitData, ref, ":::query params");
-
 
   // track the type query
   useEffect(() => {
     setLogin(true);
   }, [type]);
-
 
   useEffect(() => {
     const storageItem = localStorage.getItem('fd-session');
