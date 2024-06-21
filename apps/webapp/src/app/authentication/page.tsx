@@ -8,7 +8,7 @@ import AppleAuth from "@/components/onboarding/AppleAuth";
 import Authentication from "@/components/onboarding/Authentication";
 import GoogleAuth from "@/components/onboarding/GoogleAuth";
 import { Button } from "@/components/ui/button";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [login, setLogin] = useState<HTMLButtonElement | boolean>(false);
@@ -20,18 +20,18 @@ export default function Home() {
 
 
 
-  console.log(type,tgInitData, ref, ":::query params");
+  console.log(type, tgInitData, ref, ":::query params");
 
 
   // track the type query
-  useEffect(()=> {
+  useEffect(() => {
     setLogin(true);
   }, [type]);
 
 
   useEffect(() => {
     const storageItem = localStorage.getItem('fd-session');
-    if(storageItem) {
+    if (storageItem) {
       const session = JSON.parse(storageItem);
       router.replace(`/dashboard?userId=${session?.userId}`);
     }
@@ -68,15 +68,15 @@ export default function Home() {
         </div>
       ) : (
         <div className="my-5 text-center">
-          <Link
+          {type && type === "tg" ? null : <Link
             href="/authentication/forgetmail"
             className="underline-offset-3 text-lg underline"
           >
             Forget Password?
-          </Link>
+          </Link>}
         </div>
       )}
-      {type && type === "tg"? null :  <div className="text-center">
+      {type && type === "tg" ? null : <div className="text-center">
         <p className="text-lg text-[#6A6A6A]">
           {login ? "Don't have an Account?" : "Have an Account?"}
           <Button
@@ -87,7 +87,7 @@ export default function Home() {
           </Button>
         </p>
       </div>
-}      <div className="mt-auto pb-10 pt-10 text-lg text-black dark:text-white">
+      }      <div className="mt-auto pb-10 pt-10 text-lg text-black dark:text-white">
         <center>
           By continuing, you agree to our
           {/* Terms of Service */}

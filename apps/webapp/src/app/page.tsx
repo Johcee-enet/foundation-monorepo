@@ -14,7 +14,6 @@ export default function Home() {
   const router = useRouter();
   const isClient = useClient();
 
-  const linkTelegram = useAction(api.onboarding.linkTelegram);
 
 
   useEffect(() => {
@@ -58,9 +57,9 @@ export default function Home() {
       {
         isClient && (typeof window !== "undefined") &&
         (
-          <div className="flex w-full items-center justify-between">
-            <Button onClick={() => router.push(`/authentication?type=tg&initData=${WebApp.initData}`)}>Link telegram</Button>  
-            <Button variant="secondary" onClick={async () => {
+          <div className="flex w-full items-center justify-center gap-2 px-2">
+            <Button className="btn flex-1" onClick={() => router.push(`/authentication?type=tg&initData=${WebApp.initData}`)}>Link telegram</Button>  
+            <Button  className="btn-username flex-1" variant="secondary" onClick={async () => {
               //> TODO: cerate user account with TG details
             }} >Create Account</Button>  
           </div>
