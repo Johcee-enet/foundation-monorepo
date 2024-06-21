@@ -53,8 +53,7 @@ export default function Home() {
       </div>
 
       {/* Form Authentication */}
-
-      <Authentication login={login} refCode={ref} type={type} />
+      <Authentication login={login} refCode={ref} type={type} tgInitData={tgInitData} />
       {!login ? (
         <div className="my-5 space-y-5 text-center">
           <span className="text-lg text-[#6A6A6A]">Or continue with</span>
