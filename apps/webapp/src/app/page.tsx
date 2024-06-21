@@ -6,10 +6,24 @@ import { useRouter, useSearchParams } from "next/navigation";
 import WebApp from "@twa-dev/sdk";
 import { MainButton } from "@twa-dev/sdk/react";
 import { useClient } from "@/lib/mountContext";
+import { Button } from "@/components/ui/button";
+import { useAction } from "convex/react";
+import { api } from "@acme/api/convex/_generated/api";
 
 export default function Home() {
-  // const router = useRouter();
+  const router = useRouter();
   const isClient = useClient();
+
+  const linkTelegram = useAction(api.onboarding.linkTelegram);
+
+
+  useEffect(() => {
+
+    if(isClient) {
+      WebApp.showPopup({message: "Link an existing account or create a new one with telegram user information", title: "Link/Create Account"}, (id) => {console.log(id, ":::Id of pop up")});
+    }
+    
+  }, [isClient]);
 
   return (
     <main className="flex flex-col items-center justify-center gap-24 min-h-screen">
@@ -43,15 +57,12 @@ export default function Home() {
       </div>
       {
         isClient && (typeof window !== "undefined") &&
-        <MainButton text="Authorize app" onClick={() => {
-          console.log(WebApp.initData, ":::Init data");
-          WebApp.showPopup({
-            title: "User init data",
-            message: "Link your account if you've previously onboarded on the web or mobile app"
-          },
-            (id) => console.log("Dialog ID", id)
-          );
-        }} />
+        (
+          <div className="flex w-full items-center justify-between">
+            <Button onClick={() => router.push(`/authentication?type=tg&initData=${WebApp.initData}`)}>Link telegram</Button>  
+            <Button variant="secondary" onClick={async () => {}} >Create Account</Button>  
+          </div>
+        )
       }
     </main>
   );

@@ -32,6 +32,8 @@ export default function SessionProvider({ children }: SessionProps) {
   const isClient = useClient();
 
   useEffect(() => {
+
+    //TODO: check TG localStorage for userId and auto log user in
     // @ts-ignore
     if (isClient && typeof window !== "undefined") {
       console.log("Check from session provider");
