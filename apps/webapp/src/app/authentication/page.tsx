@@ -14,8 +14,19 @@ export default function Home() {
   const [login, setLogin] = useState<HTMLButtonElement | boolean>(false);
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref");
+  const type = searchParams.get("type");
+  const tgInitData = searchParams.get("initData");
   const router = useRouter();
 
+
+
+  console.log(type,tgInitData, ref, ":::query params");
+
+
+  // track the type query
+  useEffect(()=> {
+    setLogin(true);
+  }, [type]);
 
 
   useEffect(() => {
@@ -43,7 +54,7 @@ export default function Home() {
 
       {/* Form Authentication */}
 
-      <Authentication login={login} refCode={ref} />
+      <Authentication login={login} refCode={ref} type={type} />
       {!login ? (
         <div className="my-5 space-y-5 text-center">
           <span className="text-lg text-[#6A6A6A]">Or continue with</span>
@@ -65,7 +76,7 @@ export default function Home() {
           </Link>
         </div>
       )}
-      <div className="text-center">
+      {type && type === "tg"? null :  <div className="text-center">
         <p className="text-lg text-[#6A6A6A]">
           {login ? "Don't have an Account?" : "Have an Account?"}
           <Button
@@ -76,7 +87,7 @@ export default function Home() {
           </Button>
         </p>
       </div>
-      <div className="mt-auto pb-10 pt-10 text-lg text-black dark:text-white">
+}      <div className="mt-auto pb-10 pt-10 text-lg text-black dark:text-white">
         <center>
           By continuing, you agree to our
           {/* Terms of Service */}

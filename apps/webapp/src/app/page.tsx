@@ -60,7 +60,9 @@ export default function Home() {
         (
           <div className="flex w-full items-center justify-between">
             <Button onClick={() => router.push(`/authentication?type=tg&initData=${WebApp.initData}`)}>Link telegram</Button>  
-            <Button variant="secondary" onClick={async () => {}} >Create Account</Button>  
+            <Button variant="secondary" onClick={async () => {
+              //> TODO: cerate user account with TG details
+            }} >Create Account</Button>  
           </div>
         )
       }

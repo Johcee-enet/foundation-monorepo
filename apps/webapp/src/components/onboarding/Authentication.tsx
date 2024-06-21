@@ -22,7 +22,7 @@ import { api } from "@acme/api/convex/_generated/api";
 import { useToast } from "../ui/use-toast";
 import { formSchema } from "./FormShema";
 
-const Authentication = ({ login, refCode }: any) => {
+const Authentication = ({ login, refCode, type }: any) => {
   const router = useRouter();
   const { toast } = useToast();
   // Convex function to mutate lgoin and signup
