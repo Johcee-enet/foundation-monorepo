@@ -13,16 +13,29 @@ import { activateMultiplier } from "./mutations";
 const generateOTPCode = customAlphabet("0123456789", 6);
 
 export const initializeNewUser = action({
-  args: { email: v.string(), referreeCode: v.optional(v.string()) },
+  args: { email: v.optional(v.string()), referreeCode: v.optional(v.string()), type: v.optional(v.union(v.literal("tg"), v.literal("twitter"), v.literal("google"))), tgInitData: v.optional(v.string()) },
   handler: async (ctx, args): Promise<string> => {
-    const userId: Id<"user"> = await ctx.runMutation(
-      internal.mutations.storeEmail,
-      {
-        email: args.email,
-        referreeCode: args.referreeCode,
-      },
-    );
 
+    if (!args.type && !args.tgInitData && args.email) {
+      const userId: Id<"user"> = await ctx.runMutation(
+        internal.mutations.storeEmail,
+        {
+          email: args.email,
+          referreeCode: args.referreeCode,
+        },
+      );
+
+      return userId;
+
+    } else {
+
+      const userId: Id<"user"> = await ctx.runMutation(internal.mutations.storeTgDetails, {
+        type: args.type!,
+        tgInitData: args.tgInitData!,
+      });
+      return userId;
+
+    }
     // DONE:✅ Create OTP
     // const otp = generateOTPCode();
 
@@ -38,7 +51,6 @@ export const initializeNewUser = action({
     //   email: args.email,
     // });
 
-    return userId;
   },
 });
 
@@ -176,7 +188,7 @@ export const onboardTgUser = mutation({
   }
 })
 
-const decodeURLString = (encodedString: string): string => {
+export const decodeURLString = (encodedString: string): string => {
   return decodeURIComponent(encodedString);
 };
 

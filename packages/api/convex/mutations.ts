@@ -9,9 +9,10 @@ import {
   internalMutation,
   mutation,
 } from "./_generated/server";
+import { decodeURLString } from "./onboarding";
 
 export const storeEmail = internalMutation({
-  args: { email: v.string(), referreeCode: v.optional(v.string()) },
+  args: { email: v.optional(v.string()), referreeCode: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const config = await ctx.db.query("config").first();
     // Check if email already exists
@@ -57,7 +58,7 @@ export const storeEmail = internalMutation({
 
     // Store email and referral
     const userId = await ctx.db.insert("user", {
-      email: args.email.toLowerCase(),
+      email: args.email?.toLowerCase(),
       referreeCode: args.referreeCode,
       minedCount: 0,
       miningRate: config?.miningCount ?? 2.0,
@@ -72,6 +73,80 @@ export const storeEmail = internalMutation({
     return userId;
   },
 });
+
+
+
+export const storeTgDetails = internalMutation({
+  args: { type: v.union(v.literal("tg"), v.literal("twitter"), v.literal("google")), tgInitData: v.string() },
+  handler: async (ctx, args) => {
+        console.log(args.tgInitData, ":::initData to split on");
+    // Decode the user object
+    const splitString = args.tgInitData.split("&");
+    const userSplit = splitString[1].split("=");
+    const tgUserObject = JSON.parse(decodeURLString(userSplit[1]));
+
+    console.log(tgUserObject, ":::Decoded string of TG user");
+
+    const config = await ctx.db.query("config").first();
+    // Check if email already exists
+    const existingUsers = await ctx.db
+      .query("user")
+      .withIndex("by_tgUserId", (q) => q.eq("tgUserId", tgUserObject?.id))
+      .collect();
+
+    // Checking if the users email already exists without being deleted
+    if (
+      existingUsers?.some((user) => user.tgUserId === tgUserObject?.id && !user?.deleted)
+    ) {
+      throw new ConvexError({
+        message: "Telegram account already exists",
+        code: 400,
+        status: "failed",
+      });
+    }
+
+    // Fetch dangling user details after deleted account
+    const previouslyDeleted = await ctx.db
+      .query("user")
+      .withIndex("by_tgUserId_deleted", (q) =>
+        q.eq("tgUserId", tgUserObject?.id).eq("deleted", true),
+      )
+      .unique();
+
+    // If user was previously deleted update fields
+    if (previouslyDeleted) {
+      await ctx.db.patch(previouslyDeleted._id, {
+        ...previouslyDeleted,
+        minedCount: 0,
+        miningRate: config?.miningCount,
+        mineActive: false,
+        referralCount: 0,
+        mineHours: config?.miningHours ?? 6,
+        redeemableCount: 0,
+        xpCount: config?.xpCount ?? 1000,
+      });
+
+      return previouslyDeleted._id;
+    }
+
+    // Store email and referral
+    const userId = await ctx.db.insert("user", {
+      tgUserId: tgUserObject?.id,
+      tgUsername: tgUserObject?.username,
+      minedCount: 0,
+      miningRate: config?.miningCount ?? 2.0,
+      mineActive: false,
+      referralCount: 0,
+      mineHours: config?.miningHours ?? 6,
+      redeemableCount: 0,
+      xpCount: config?.xpCount ?? 1000,
+      deleted: false,
+    });
+
+    return userId;
+  },
+  
+})
 
 export const storeOTPSecret = internalMutation({
   args: { secret: v.string(), userId: v.id("user") },
