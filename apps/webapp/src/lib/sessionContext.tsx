@@ -57,10 +57,7 @@ export default function SessionProvider({ children }: SessionProps) {
             if (!session?.isOnboarded) {
               router.replace("/")
             }
-          } else {
-            router.replace("/")
-          }
-          return;
+          }          return;
         } else {
           const _session = localStorage.getItem("fd-session");
           if (_session && !pathname.includes("authentication")) {
@@ -71,10 +68,7 @@ export default function SessionProvider({ children }: SessionProps) {
             if (!session?.isOnboarded) {
               router.replace("/authentication")
             }
-          } else {
-            router.replace("/authentication")
           }
-
           // if (ref) {
           //   router.push(`/authentication?ref=${ref}`);
           // } else {
