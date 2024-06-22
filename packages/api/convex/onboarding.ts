@@ -147,6 +147,7 @@ export const linkTelegram = internalAction({
     // query_id=AAHhvbU6AAAAAOG9tToA9NpU&user=%7B%22id%22%3A984989153%2C%22first_name%22%3A%22Mimi_%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22afullsnack%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1718925398&hash=5ed3e41cff5856e8f73f3b3862269f0e3e19161956368d4c9b5fe186fdb32540
     // "query_id=AAHhvbU6AAAAAOG9tToA9NpU&user=%7B%22id%22%3A984989153%2C%22first_name%22%3A%22Mimi_%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22afullsnack%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1718925398&hash=5ed3e41cff5856e8f73f3b3862269f0e3e19161956368d4c9b5fe186fdb32540"
 
+    console.log(initData, ":::initData to split on");
     // Decode the user object
     const splitString = initData.split("&");
     const userSplit = splitString[1].split("=");

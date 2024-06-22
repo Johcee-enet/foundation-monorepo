@@ -18,7 +18,7 @@ export default function Home() {
 
   useEffect(() => {
 
-    if(isClient) {
+    if(isClient && typeof window !== "undefined" && WebApp.initData.length) {
       WebApp.showPopup({message: "Link an existing account or create a new one with telegram user information", title: "Link/Create Account"}, (id) => {console.log(id, ":::Id of pop up")});
     }
     
