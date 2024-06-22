@@ -21,7 +21,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { api } from "@acme/api/convex/_generated/api";
 import { Doc, Id } from "@acme/api/convex/_generated/dataModel";
 
-const Tasks: FC<{ userId: string | null }> = ({ userId }) => {
+const Tasks: FC<{ userId: string | undefined }> = ({ userId }) => {
   const session = useSession();
 
   const tasks = useQuery(api.queries.fetchTasks, {
@@ -35,13 +35,11 @@ const Tasks: FC<{ userId: string | null }> = ({ userId }) => {
       <h5 className="mb-8 mt-6 text-center text-lg font-semibold">
         Simple task for more Xp`s
       </h5>
-      <Suspense>
-        <TaskItems
-          tasks={tasks}
-          userId={(session?.userId ?? userId) as string}
-        />
-      </Suspense>
-    </div>
+      {typeof tasks !== "undefined" ? <TaskItems
+        tasks={tasks}
+        userId={(session?.userId ?? userId) as string}
+      /> : <Loader color="white" />
+      }    </div>
   );
 };
 
@@ -97,16 +95,15 @@ const Item: FC<{
   return (
     <Dialog
       open={dialogOpen}
-      // onOpenChange={(open) => setDialogOpen(open)}
+    // onOpenChange={(open) => setDialogOpen(open)}
     >
       <DialogTrigger asChild>
         <li key={ki} className="task-list">
           <Link
             href={item?.action?.link}
             target="_blank"
-            className={`px-5 py-4 ${
-              completedTask ? "opacity-30" : ""
-            } block space-y-2`}
+            className={`px-5 py-4 ${completedTask ? "opacity-30" : ""
+              } block space-y-2`}
             onClick={async (e) => {
               if (completedTask) {
                 e.preventDefault();

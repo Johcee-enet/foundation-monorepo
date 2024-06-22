@@ -14,7 +14,7 @@ import { TiFlash } from "react-icons/ti";
 import Tasks from "./task/Tasks";
 import { Doc } from "@acme/api/convex/_generated/dataModel";
 
-const PlannedTask: FC<{ userId: string | null, userDetail: Doc<"user"> | null | undefined }> = ({ userId, userDetail }) => {
+const PlannedTask: FC<{ userId: string | undefined, userDetail: Doc<"user"> | null | undefined }> = ({ userId, userDetail }) => {
   const [showMultiplier, setShowMultiplier] = useState(false);
   return (
     <Tabs defaultValue="socialXps" className="drop-shadow-sm">

@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   // Fetch users data
   const userDetail = useQuery(api.queries.getUserDetails, {
-    userId: (session?.userId ?? userId) as Id<"user"> | undefined,
+    userId: session?.userId as Id<"user"> | undefined,
   });
 
   // const claimReward = useMutation(api.mutations.claimRewards);
@@ -40,7 +40,7 @@ const Dashboard = () => {
   // console.log(bottom, top, ":::Bottom Top, size", height, height - top);
 
   // handle tasks cycle
-  const [isLoadingModalVisible, setLoadingModalVisible] = useState(typeof userDetail === "undefined"? true : false);
+  const [isLoadingModalVisible, setLoadingModalVisible] = useState(session?.isLoading && typeof userDetail === "undefined"? true : false);
   // const rewardTaskXpCount = useMutation(api.mutations.rewardTaskXp);
   // const rewardEventXpCount = useMutation(api.mutations.rewardEventXp);
   // const updateEventAction = useMutation(api.mutations.updateEventsForUser);
@@ -53,11 +53,14 @@ const Dashboard = () => {
   // toggle loader modal
   useEffect(() => {
 
-    if(userDetail && typeof userDetail !== "undefined") {
+    console.log(typeof userDetail, session, ":::SettingLoader");
+
+    if(userDetail && typeof userDetail !== "undefined" && !session?.isLoading) {
+      console.log("Session has been updated");
       setLoadingModalVisible(false);
     }
     
-  }, [userDetail, session])
+  }, [userDetail, session?.isLoading, session])
 
 
   useEffect(() => {
@@ -113,7 +116,7 @@ const Dashboard = () => {
           </div>
         </Link>
       </div>
-      <PlannedTask userDetail={userDetail} userId={userId} />
+      {typeof userDetail !== "undefined" && !session?.isLoading && <PlannedTask userDetail={userDetail} userId={userDetail?._id ?? session?.userId} />}
       <TwitterProfile />
       <AdBanner dataAdSlot="2550264144" dataAdFormat="auto" dataFullWidthResponsive={true} />
       {/* <ClaimXP /> */}

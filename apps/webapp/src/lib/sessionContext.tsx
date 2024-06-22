@@ -12,10 +12,12 @@ import { useClient } from "./mountContext";
 import WebApp from "@twa-dev/sdk";
 
 type ISession = {
-  userId: string | null;
+  userId: string | undefined;
+  isTgUser: boolean | null | undefined,
+  isLoading: boolean | undefined
 };
 
-const SessionContext = createContext<ISession | null>({ userId: null });
+const SessionContext = createContext<ISession | null>({ userId: undefined, isTgUser: null, isLoading: true });
 
 interface SessionProps {
   children: ReactNode;
@@ -26,9 +28,10 @@ export default function SessionProvider({ children }: SessionProps) {
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref");
 
-  const [session, setSession] = useState<{ userId: string | null } | null>(
+  const [session, setSession] = useState<ISession | null>(
     null,
   );
+  const [sessionLoading, setSessionLoading] = useState<boolean>(true);
   const isClient = useClient();
 
   useEffect(() => {
@@ -48,10 +51,9 @@ export default function SessionProvider({ children }: SessionProps) {
           if (_session && !pathname.includes("authentication")) {
             const session = JSON.parse(_session);
             console.log(session, ":::from localStorage Tg APP", window.Telegram);
-            if (session?.isOnboarded && session?.isTgUser) {
-              setSession(session);
-              router.replace("/dashboard");
-            } else {
+            setSession(session);
+            setSessionLoading(false);
+            if (!session?.isOnboarded && session?.isTgUser) {
               router.replace("/")
             }
           } else {
@@ -64,11 +66,9 @@ export default function SessionProvider({ children }: SessionProps) {
             const session = JSON.parse(_session);
             console.log(session, ":::Web app session");
             setSession(session);
+            setSessionLoading(false);
 
-            if (session?.isOnboarded) {
-              setSession(session);
-              router.replace("/dashboard");
-            } else {
+            if (!session?.isOnboarded) {
               router.replace("/authentication")
             }
           } else {
@@ -84,11 +84,11 @@ export default function SessionProvider({ children }: SessionProps) {
 
       }, 4000);
     }
-  }, [router, isClient, setSession, session, pathname]);
+  }, [router, isClient, setSession, pathname]);
 
   return (
     <SessionContext.Provider
-      value={{ userId: session?.userId as string | null }}
+      value={{ userId: session?.userId as string | undefined, isTgUser: session?.isTgUser, isLoading: sessionLoading }}
     >
       {children}
     </SessionContext.Provider>
