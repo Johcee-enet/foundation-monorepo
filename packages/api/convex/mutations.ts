@@ -131,7 +131,7 @@ export const storeTgDetails = internalMutation({
 
     // Store email and referral
     const userId = await ctx.db.insert("user", {
-      tgUserId: tgUserObject?.id,
+      tgUserId: tgUserObject?.id.toString(),
       tgUsername: tgUserObject?.username,
       minedCount: 0,
       miningRate: config?.miningCount ?? 2.0,
