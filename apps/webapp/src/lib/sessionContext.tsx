@@ -50,6 +50,7 @@ export default function SessionProvider({ children }: SessionProps) {
           const _session = localStorage.getItem("fd-session");
           if (_session && !pathname.includes("authentication")) {
             const session = JSON.parse(_session);
+            console.log(session, ":::Web app session");
             console.log(session, ":::from localStorage Tg APP", window.Telegram);
             setSession(session);
             setSessionLoading(false);
@@ -64,7 +65,6 @@ export default function SessionProvider({ children }: SessionProps) {
           const _session = localStorage.getItem("fd-session");
           if (_session && !pathname.includes("authentication")) {
             const session = JSON.parse(_session);
-            console.log(session, ":::Web app session");
             setSession(session);
             setSessionLoading(false);
 

@@ -19,18 +19,26 @@ export default function Home() {
   const isClient = useClient();
   const [isCreatingLoading, setIsCreatingLoading] = useState(false);
 
-
   const creatTgUserAccount = useAction(api.onboarding.initializeNewUser);
-
-
-
   useEffect(() => {
 
-    if (isClient && typeof window !== "undefined" && !!WebApp.initData.length) {
+    if (typeof window !== "undefined" && !!WebApp.initData.length) {
       // WebApp.showPopup({message: "Link an existing account or create a new one with telegram user information", title: "Link/Create Account"}, (id) => {console.log(id, ":::Id of pop up")});
       console.log(WebApp.initData, WebApp.initDataUnsafe, ":::init data inside entry page");
-    }
+      const localItem = localStorage.getItem('fd-session');
+      const session = localItem? JSON.parse(localItem) : null;
 
+      if(session && session?.isOnboarded) {
+        router.replace("/dashboard");
+      }
+    } else {
+      const localItem = localStorage.getItem('fd-session');
+      const session = localItem? JSON.parse(localItem) : null;
+
+      if(session && session?.isOnboarded) {
+        router.replace("/dashboard");
+      }
+    }
   }, [isClient]);
 
   return (

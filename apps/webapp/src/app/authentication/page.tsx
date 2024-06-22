@@ -23,18 +23,11 @@ export default function Home() {
 
   // track the type query
   useEffect(() => {
-    setLogin(true);
+    if (type && type === "tg") {
+      setLogin(true);
+    }
   }, [type]);
 
-  useEffect(() => {
-    const storageItem = localStorage.getItem('fd-session');
-    if (storageItem) {
-      const session = JSON.parse(storageItem);
-      if (session?.isOnboarded) {
-        router.replace(`/dashboard?userId=${session?.userId}`);
-      }
-    }
-  }, []);
 
   return (
     <main className="flex flex-col">
