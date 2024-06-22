@@ -32,6 +32,7 @@ export default function SessionProvider({ children }: SessionProps) {
   const isClient = useClient();
 
   useEffect(() => {
+    console.log("Called on every route change");
 
     //TODO: check TG localStorage for userId and auto log user in
     // @ts-ignore
@@ -46,6 +47,7 @@ export default function SessionProvider({ children }: SessionProps) {
           const _session = localStorage.getItem("fd-session");
           if (_session && !pathname.includes("authentication")) {
             const session = JSON.parse(_session);
+            console.log(session, ":::from localStorage Tg APP", window.Telegram);
             if (session?.isOnboarded && session?.isTgUser) {
               setSession(session);
               router.replace("/dashboard");
@@ -60,6 +62,9 @@ export default function SessionProvider({ children }: SessionProps) {
           const _session = localStorage.getItem("fd-session");
           if (_session && !pathname.includes("authentication")) {
             const session = JSON.parse(_session);
+            console.log(session, ":::Web app session");
+            setSession(session);
+
             if (session?.isOnboarded) {
               setSession(session);
               router.replace("/dashboard");
@@ -79,7 +84,7 @@ export default function SessionProvider({ children }: SessionProps) {
 
       }, 4000);
     }
-  }, [router, isClient]);
+  }, [router, isClient, setSession, session, pathname]);
 
   return (
     <SessionContext.Provider
