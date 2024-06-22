@@ -53,7 +53,7 @@ export default function SessionProvider({ children }: SessionProps) {
             console.log(session, ":::from localStorage Tg APP", window.Telegram);
             setSession(session);
             setSessionLoading(false);
-            if (!session?.isOnboarded && session?.isTgUser) {
+            if (!session?.isOnboarded) {
               router.replace("/")
             }
           } else {
@@ -82,7 +82,7 @@ export default function SessionProvider({ children }: SessionProps) {
           // }
         }
 
-      }, 4000);
+      }, 3000);
     }
   }, [router, isClient, setSession, pathname]);
 
