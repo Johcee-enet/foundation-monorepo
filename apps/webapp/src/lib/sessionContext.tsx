@@ -42,7 +42,7 @@ export default function SessionProvider({ children }: SessionProps) {
       setTimeout(() => {
         if (("WebApp" in window.Telegram && WebApp.initData.length)) {
           console.log(WebApp, ":::Telegram embeds");
-          console.log("inside telegram webview");
+          console.log("inside telegram webview", WebApp.initData, WebApp.initDataUnsafe);
           return;
         } else {
           const _session = localStorage.getItem("fd-session");

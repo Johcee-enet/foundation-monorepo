@@ -55,7 +55,7 @@ export default function Home() {
         />
       </div>
       {
-        isClient && (typeof window !== "undefined") && WebApp.initData.length &&
+        isClient && (typeof window !== "undefined") && !!WebApp.initData.length &&
         (
           <div className="flex w-full items-center justify-center gap-2 px-2">
             <Button className="btn flex-1" onClick={() => router.push(`/authentication?type=tg&initData=${WebApp.initData}`)}>Link telegram</Button>  
