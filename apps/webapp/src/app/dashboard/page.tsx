@@ -57,7 +57,7 @@ const Dashboard = () => {
       setLoadingModalVisible(false);
     }
     
-  }, [userDetail])
+  }, [userDetail, session])
 
 
   useEffect(() => {

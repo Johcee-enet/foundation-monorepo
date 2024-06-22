@@ -63,7 +63,7 @@ const Authentication = ({ login, refCode, type, tgInitData }: any) => {
         // Set session before pushing
         localStorage.setItem(
           "fd-session",
-          JSON.stringify({ userId: user?._id, isOnboarded: true }),
+          JSON.stringify({ userId: user?._id, isOnboarded: true, isTgUser: (type && type === "tg") }),
         );
         router.push(`/dashboard?userId=${user?._id}`);
       } else {
@@ -71,6 +71,8 @@ const Authentication = ({ login, refCode, type, tgInitData }: any) => {
         const userId = await signUp({
           email: values?.email.toLowerCase(),
           referreeCode: refCode ? refCode : undefined,
+          type: undefined,
+          tgInitData: undefined
         });
         // Set session before pushing
         localStorage.setItem(

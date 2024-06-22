@@ -43,6 +43,18 @@ export default function SessionProvider({ children }: SessionProps) {
         if (("WebApp" in window.Telegram && !!WebApp.initData.length)) {
           console.log(WebApp, ":::Telegram embeds");
           console.log("inside telegram webview", WebApp.initData, WebApp.initDataUnsafe);
+          const _session = localStorage.getItem("fd-session");
+          if (_session && !pathname.includes("authentication")) {
+            const session = JSON.parse(_session);
+            if (session?.isOnboarded && session?.isTgUser) {
+              setSession(session);
+              router.replace("/dashboard");
+            } else {
+              router.replace("/")
+            }
+          } else {
+            router.replace("/")
+          }
           return;
         } else {
           const _session = localStorage.getItem("fd-session");
