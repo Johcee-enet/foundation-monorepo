@@ -57,8 +57,8 @@ const Authentication = ({ login, refCode, type, tgInitData }: any) => {
         const user = await loginUser({
           email: values.email,
           password: values?.password,
-          type: type,
-          tgInitData: tgInitData.toString()
+          type: type ?? undefined,
+          tgInitData: tgInitData.toString() ?? undefined
         });
         // Set session before pushing
         localStorage.setItem(

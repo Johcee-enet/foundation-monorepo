@@ -158,10 +158,11 @@ export const linkTelegram = internalAction({
     //> store tgUsername
     await runMutation(internal.onboarding.updateUserTgObject, {
       userId: userId,
-      tgUsername: userObject["username"],
-      tgUserId: userObject["id"],
+      tgUsername: userObject?.username,
+      tgUserId: userObject?.id.toString(),
     });
     //> return userId to be stored in telegram
+    return userObject;
   },
 });
 
