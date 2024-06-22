@@ -18,7 +18,7 @@ export default function Home() {
 
   useEffect(() => {
 
-    if(isClient && typeof window !== "undefined" && WebApp.initData.length) {
+    if(isClient && typeof window !== "undefined" && !!WebApp.initData.length) {
       // WebApp.showPopup({message: "Link an existing account or create a new one with telegram user information", title: "Link/Create Account"}, (id) => {console.log(id, ":::Id of pop up")});
       console.log(WebApp.initData, WebApp.initDataUnsafe, ":::init data inside entry page");
     }
@@ -59,7 +59,7 @@ export default function Home() {
         isClient && (typeof window !== "undefined") && !!WebApp.initData.length &&
         (
           <div className="flex w-full items-center justify-center gap-2 px-2">
-            <Button className="btn flex-1" onClick={() => router.push(`/authentication?type=tg&initData=${WebApp.initData}`)}>Link telegram</Button>  
+            <Button className="btn flex-1" onClick={() => router.push(`/authentication?type=tg`)}>Link telegram</Button>  
             <Button  className="btn-username flex-1" variant="secondary" onClick={async () => {
               //> TODO: cerate user account with TG details
             }} >Create Account</Button>  

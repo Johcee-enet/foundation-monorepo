@@ -8,6 +8,7 @@ import AppleAuth from "@/components/onboarding/AppleAuth";
 import Authentication from "@/components/onboarding/Authentication";
 import GoogleAuth from "@/components/onboarding/GoogleAuth";
 import { Button } from "@/components/ui/button";
+import WebApp from "@twa-dev/sdk";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -15,10 +16,10 @@ export default function Home() {
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref");
   const type = searchParams.get("type");
-  const tgInitData = searchParams.get("initData");
+  // const tgInitData = searchParams.get("initData");
   const router = useRouter();
 
-  console.log(type, tgInitData, ref, ":::query params");
+  console.log(type, ref, ":::query params");
 
   // track the type query
   useEffect(() => {
@@ -29,7 +30,9 @@ export default function Home() {
     const storageItem = localStorage.getItem('fd-session');
     if (storageItem) {
       const session = JSON.parse(storageItem);
-      router.replace(`/dashboard?userId=${session?.userId}`);
+      if (session?.isOnboarded) {
+        router.replace(`/dashboard?userId=${session?.userId}`);
+      }
     }
   }, []);
 
@@ -49,7 +52,7 @@ export default function Home() {
       </div>
 
       {/* Form Authentication */}
-      <Authentication login={login} refCode={ref} type={type} tgInitData={tgInitData} />
+      <Authentication login={login} refCode={ref} type={type} tgInitData={WebApp.initData ?? WebApp.initDataUnsafe} />
       {!login ? (
         <div className="my-5 space-y-5 text-center">
           <span className="text-lg text-[#6A6A6A]">Or continue with</span>
